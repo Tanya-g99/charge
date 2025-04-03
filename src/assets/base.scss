@@ -1,0 +1,312 @@
+  :root {
+    /* === Цвета сообщений === */
+    --color-success-light: #16c60c;
+    /* Яркий зеленый */
+    --color-success-light-hover: #13b60b;
+    /* Немного темнее для наведения */
+    --color-error-light: #ff1e56;
+    /* Яркий красный */
+    --color-error-light-hover: #e00c46;
+    /* Немного темнее для наведения */
+    --color-warning-light: #ffb900;
+    /* Ярко-желтый */
+    --color-warning-light-hover: #eaa700;
+    /* Немного темнее для наведения */
+    --color-info-light: #00c8ff;
+    /* Лазурно-синий */
+    --color-info-light-hover: #00a1cc;
+    /* Немного темнее для наведения */
+    --color-success-dark: #00a200;
+    /* Темный зеленый */
+    --color-success-dark-hover: #008c00;
+    /* Немного темнее для наведения */
+    --color-error-dark: #d80032;
+    /* Темный красный */
+    --color-error-dark-hover: #c1002b;
+    /* Немного темнее для наведения */
+    --color-warning-dark: #ff8c00;
+    /* Темный оранжевый */
+    --color-warning-dark-hover: #e47d00;
+    /* Немного темнее для наведения */
+    --color-info-dark: #009ec3;
+    /* Темный лазурно-синий */
+    --color-info-dark-hover: #0083a1;
+    /* Немного темнее для наведения */
+
+    /* === Цвета для фона и текста === */
+    --color-light-100: #f4f7fc;
+    --color-light-200: #e4ebf3;
+    --color-light-300: #cfd7e0;
+    --color-light-400: #1e1e2e;
+    --color-light-500: #6b7280;
+
+    --color-dark-100: #1f2a3d;
+    --color-dark-200: #5c6679;
+    --color-dark-300: #22272f;
+    --color-dark-400: #d6dbe3;
+    --color-dark-500: #a8adb7;
+
+    --color-dark-border-100: var(--p-primary-color);
+    --color-dark-border-200: var(--color-dark-500);
+    --color-light-border-100: var(--p-primary-color);
+    --color-light-border-200: var(--color-light-500);
+
+    --color-text-light: #1e1e2e;
+    --color-text-dark: #ffffff;
+
+    --color-text-muted-light: #6b7280;
+    --color-text-muted-dark: #a8adb7;
+    /* === Кнопки === */
+    --color-button-text-light: #ffffff;
+    --color-button-text-dark: #ffffff;
+    --color-button-hover-light: rgb(12, 50, 90);
+    --color-button-hover-dark: rgb(33, 107, 161);
+    --color-button-disabled-light: #c5c5c5;
+    --color-button-disabled-dark: #323b48;
+
+    --color-text-primary: #ffffff;
+
+    /* === Яркие оттенки для состояния при наведении === */
+    --color-success-bright: #13b60b;
+    --color-error-bright: #e00c46;
+    --color-warning-bright: #eaa700;
+    --color-info-bright: #00a1cc;
+
+
+    /* === Таблицы === */
+    --color-table-border-light: var(--color-light-400);
+    --color-table-header-light: var(--p-primary-900);
+    --color-table-header-hover-light: var(--p-primary-color);
+    --color-table-row-bg-light: #f0f4f8;
+    --color-table-row-light: var(--color-light-300);
+    --color-table-hover-light: var(--p-primary-color);
+    --color-table-bg-light: var(--color-table-row-bg-light);
+
+    --color-table-border-dark: var(--color-dark-400);
+    --color-table-header-dark: var(--p-primary-900);
+    --color-table-header-hover-dark: var(--p-primary-color);
+    --color-table-row-bg-dark: #343a46;
+    --color-table-row-dark: var(--color-dark-300);
+    --color-table-hover-dark: var(--p-primary-color);
+    --color-table-bg-dark: var(--color-table-row-bg-dark);
+
+  }
+
+  /* === Блок 2: Светлая тема === */
+  [data-theme="light"] {
+    --color-background: var(--color-light-300);
+    --color-background-soft: var(--color-light-100);
+    --color-background-muted: var(--color-light-200);
+
+    --color-border: var(--color-light-border-100);
+    --color-border-hover: var(--color-light-border-200);
+
+    --color-menu-bg: var(--color-light-100);
+    /* Светлый синий оттенок для фона меню */
+    --color-menu-text: var(--p-primary-700);
+    /* Яркий темно-синий для текста в меню */
+    --color-menu-hover: var(--p-primary-color);
+    /* Лазурно-синий при наведении */
+    --color-menu-active: var(--p-primary-color);
+    /* Темно-синий для активного элемента */
+
+    --color-button-bg: var(--p-primary-color);
+    /* Лазурно-синий для кнопок */
+    --color-button-border: var(--color-light-border-100);
+    --color-button-text: var(--color-button-text-light);
+    --color-button-hover: var(--color-button-hover-light);
+    --color-button-disabled: var(--color-button-disabled-light);
+
+    --color-input-bg: var(--color-light-100);
+    --color-input-border: var(--color-light-border-100);
+    --color-input-hover: var(--color-light-input-hover);
+    --color-input-text: var(--color-light-400);
+
+    --color-card-bg: var(--color-light-200);
+    --color-card-bg-opacity: var(--color-light-opacity);
+    --color-card-border-opacity: var(--color-dark-opacity);
+    --color-card-border: var(--color-light-border-100);
+    --color-card-text: var(--p-primary-color);
+
+    --color-heading: var(--p-primary-color);
+    /* Лазурно-синий для заголовков */
+    --color-text: var(--color-text-light);
+    --color-text-muted: var(--color-text-muted-light);
+
+    --color-success: var(--color-success-light);
+    --color-error: var(--color-error-light);
+    --color-warning: var(--color-warning-light);
+    --color-info: var(--color-info-light);
+    /* === Яркие оттенки для состояния при наведении === */
+    --color-success-bright: var(--color-success-light-hover);
+    /* Яркий зеленый при наведении */
+    --color-error-bright: var(--color-error-light-hover);
+    /* Яркий красный при наведении */
+    --color-warning-bright: var(--color-warning-light-hover);
+    /* Ярко-желтый при наведении */
+    --color-info-bright: var(--color-info-light-hover);
+    /* Лазурно-синий при наведении */
+
+    --color-chart-bg: var(--color-light-100);
+    --color-chart-line: var(--color-dark-100);
+
+    --color-scrollbar: var(--color-light-300);
+
+    --color-table-border: var(--color-table-border-light);
+    --color-table-header: var(--color-table-header-light);
+    --color-table-header-hover: var(--color-table-header-hover-light);
+    --color-table-row: var(--color-table-row-light);
+    --color-table-hover: var(--color-table-hover-light);
+    --color-table-bg: var(--color-table-bg-light);
+  }
+
+  /* === Блок 3: Тёмная тема === */
+  [data-theme="dark"] {
+    --color-background: var(--color-dark-300);
+    --color-background-soft: var(--color-dark-100);
+    --color-background-muted: var(--color-dark-200);
+
+    --color-border: var(--color-dark-border-100);
+    --color-border-hover: var(--color-dark-border-200);
+
+    --color-menu-bg: var(--color-dark-100);
+    /* Темный синий фон для меню */
+    --color-menu-text: var(--p-primary-700);
+    /* Белый текст для контраста */
+    --color-menu-hover: var(--p-primary-color);
+    /* Лазурно-синий при наведении */
+    --color-menu-active: var(--p-primary-color);
+    /* Темно-синий для активного элемента */
+
+    --color-button-bg: var(--p-primary-color);
+    /* Лазурно-синий для кнопок */
+    --color-button-border: var(--color-dark-border-100);
+    --color-button-text: var(--color-button-text-dark);
+    --color-button-hover: var(--color-button-hover-dark);
+    --color-button-disabled: var(--color-button-disabled-dark);
+
+    --color-input-bg: var(--color-dark-100);
+    --color-input-border: var(--color-dark-border-100);
+    --color-input-hover: var(--color-dark-input-hover);
+    --color-input-text: var(--color-dark-400);
+
+    --color-card-bg: var(--color-dark-200);
+    --color-card-bg-opacity: var(--color-dark-opacity);
+    --color-card-border-opacity: var(--color-light-opacity);
+    font-weight: bold;
+
+    --color-card-border: var(--color-dark-border-100);
+    --color-card-text: var(--p-primary-color);
+
+    --color-heading: var(--p-primary-color);
+    /* Лазурно-синий для заголовков */
+    --color-text: var(--color-text-dark);
+    --color-text-muted: var(--color-text-muted-dark);
+
+    --color-success: var(--color-success-dark);
+    --color-error: var(--color-error-dark);
+    --color-warning: var(--color-warning-dark);
+    --color-info: var(--color-info-dark);
+    /* === Яркие оттенки для состояния при наведении === */
+    --color-success-bright: var(--color-success-dark-hover);
+    /* Яркий зеленый при наведении */
+    --color-error-bright: var(--color-error-dark-hover);
+    /* Яркий красный при наведении */
+    --color-warning-bright: var(--color-warning-dark-hover);
+    /* Ярко-желтый при наведении */
+    --color-info-bright: var(--color-info-dark-hover);
+    /* Лазурно-синий при наведении */
+
+    --color-chart-bg: var(--color-dark-100);
+    --color-chart-line: var(--color-light-100);
+
+    --color-scrollbar: var(--color-dark-300);
+
+    --color-table-border: var(--color-table-border-dark);
+    --color-table-header: var(--color-table-header-dark);
+    --color-table-header-hover: var(--color-table-header-hover-dark);
+    --color-table-row: var(--color-table-row-dark);
+    --color-table-hover: var(--color-table-hover-dark);
+    --color-table-bg: var(--color-table-bg-dark);
+  }
+
+  :root {
+    --field-padding: 0.5rem;
+    --field-radius: 5px;
+
+    --button-padding: 0.5rem;
+    --button-gap: 8px;
+    --button-radius: 8px;
+
+    --card-padding: 8px;
+    --card-large-padding: 16px;
+    --cadr-radius: 4px;
+    --cadr-large-radius: 8px;
+
+    --page-padding: 2rem;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+  }
+
+  body {
+    min-height: 100vh;
+    color: var(--color-text);
+    background: var(--color-background);
+    transition: color 0.5s,
+      background-color 0.5s;
+    line-height: 1.6;
+    font-family: Inter,
+      -apple-system,
+      BlinkMacSystemFont,
+      'Segoe UI',
+      Roboto,
+      Oxygen,
+      Ubuntu,
+      Cantarell,
+      'Fira Sans',
+      'Droid Sans',
+      'Helvetica Neue',
+      sans-serif;
+    font-size: 16px !important;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    font-weight: normal;
+  }
+
+  body {
+    min-height: 100vh;
+    color: var(--color-text);
+    // background: var(--color-background);
+    transition: color 0.5s,
+      background-color 0.5s;
+    line-height: 1.6;
+    font-family: Inter,
+      -apple-system,
+      BlinkMacSystemFont,
+      'Segoe UI',
+      Roboto,
+      Oxygen,
+      Ubuntu,
+      Cantarell,
+      'Fira Sans',
+      'Droid Sans',
+      'Helvetica Neue',
+      sans-serif;
+    font-size: 15px;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }

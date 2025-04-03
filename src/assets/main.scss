@@ -1,0 +1,68 @@
+@use './base' as *;
+@use './primevue' as *;
+@import './fa5-power-transforms.min.css';
+
+#app {
+  /* max-width: 1280px; */
+  margin: 0 auto;
+  font-weight: normal;
+  width: 100%;
+  height: 100vh;
+}
+
+a {
+  text-decoration: none;
+  color: var(--color-menu-text);
+  transition: 0.4s;
+  padding: 3px;
+}
+
+@media (hover: hover) {
+  a:hover {
+    color: var(--color-menu-hover);
+  }
+}
+
+@media (min-width: 1024px) {
+  main {
+    padding: 2rem;
+  }
+
+}
+
+.icon {
+  font-family: 'FontAwesome', 'Arial', sans-serif;
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  gap: var(--button-gap);
+  padding: var(--button-padding);
+  border: none;
+  border-radius: var(--button-radius);
+  font-weight: 600;
+  background-color: var(--color-button);
+  color: var(--color-button-text);
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    background-color: var(--color-button-hover);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  &:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+
+  i {
+    font-size: 18px;
+  }
+}

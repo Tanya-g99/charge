@@ -1,0 +1,200 @@
+@layer base {
+
+    // // Form
+    // .p-multiselect,
+    // .p-inputtext,
+    // .p-checkbox-box {
+    //     background: var(--color-input-bg);
+    //     color: var(--color-input-text);
+    // }
+
+    // .p-multiselect-label {
+    //     color: var(--color-input-text);
+    // }
+
+    // // Calendar
+    // .p-datepicker-dropdown,
+    // .p-datepicker-header {
+    //     background: var(--p-primary-color);
+    //     padding: 0;
+    // }
+
+    // .p-datepicker-weekday {
+    //     color: var(--p-primary-color);
+    // }
+
+    // .p-datepicker-panel {
+    //     background: var(--color-card-bg);
+    // }
+
+    // .p-datepicker-today>.p-datepicker-day {
+    //     background: var(--p-primary-500);
+
+    // }
+
+    // .p-datepicker-day {
+    //     color: var(--color-card-text);
+    // }
+
+    // .p-datepicker-day-selected {
+    //     color: var(--color-button-text);
+    // }
+
+    .p-multiselect-panel {
+
+        .p-checkbox {
+
+            &::after {
+                content: "Select All";
+            }
+        }
+
+        .p-multiselect-close-icon {
+
+            &::before {
+                display: none;
+            }
+        }
+    }
+
+    // // Table
+
+    .table-container {
+        .p-datatable {
+            display: flex;
+            flex-direction: column;
+            height: 100% !important;
+            justify-content: space-between;
+            border-width: 1px;
+        }
+
+        .p-datatable-gridlines .p-datatable-paginator-bottom {
+            display: flex;
+            justify-content: end;
+            border-width: 1px;
+        }
+    }
+
+    // .p-datatable th,
+    // td {
+    //     border-color: var(--color-table-border);
+    // }
+
+    // .p-datatable th {
+    //     font-weight: bold;
+    //     cursor: pointer;
+    //     transition: background 0.3s ease;
+    // }
+
+    // .p-datatable-scrollable>.p-datatable-table-container>.p-datatable-table>.p-datatable-thead,
+    // .p-datatable-scrollable>.p-datatable-table-container>.p-virtualscroller>.p-datatable-table>.p-datatable-thead {
+    //     background-color: transparent;
+
+    // }
+
+    .p-datatable-header-cell {
+        background-color: var(--p-primary-900);
+        color: white;
+
+        svg[sorted=true] {
+            color: white;
+        }
+
+        svg {
+            color: rgba(255, 255, 255, 0.3);
+        }
+    }
+
+    .p-datatable-sortable-column:hover {
+        background-color: var(--p-primary-700) !important;
+    }
+
+
+    // .p-datatable-tbody>tr {
+    //     background: var(--color-table-bg);
+    //     color: var(--color-text);
+    // }
+
+    // .p-datatable.p-datatable-striped .p-datatable-tbody>tr.p-row-odd {
+    //     background-color: var(--color-table-row);
+    // }
+
+    // // Pagination
+    // .p-paginator {
+    //     background-color: var(--color-bg);
+    // }
+
+    // .p-paginator-page,
+    // .p-paginator-next,
+    // .p-paginator-last,
+    // .p-paginator-first,
+    // .p-paginator-prev {
+    //     color: var(--color-text);
+    //     background: var(--p-primary-400);
+    //     border-radius: var(--p-button-border-radius);
+    // }
+
+    // .p-paginator-page:hover,
+    // .p-paginator-next:hover,
+    // .p-paginator-last:hover,
+    // .p-paginator-first:hover,
+    // .p-paginator-prev:hover {
+    //     background: var(--p-primary-300);
+    // }
+
+    // .p-paginator-page:disabled,
+    // .p-paginator-next:disabled,
+    // .p-paginator-last:disabled,
+    // .p-paginator-first:disabled,
+    // .p-paginator-prev:disabled {
+    //     color: var(--color-text-muted);
+    //     background-color: var(--color-button-disabled);
+    // }
+
+    // .p-paginator-page-selected {
+    //     background: var(--color-button-bg);
+    //     color: var(--color-button-text);
+    // }
+
+    // .p-paginator-page-selected:hover {
+    //     background: var(--color-button-bg);
+    // }
+
+    // Button
+
+    .p-button:hover {
+        background: var(--p-primary-800);
+    }
+
+    .p-button {
+        border-width: 0;
+    }
+
+    // // Select
+    // .p-select {
+    //     background-color: var(--color-input-bg);
+    //     border-color: var(--color-input-border);
+    // }
+
+    // .p-select-overlay {
+    //     background: var(--color-card-bg);
+    //     border-color: var(--color-card-border);
+    // }
+
+    // .p-select-option {
+    //     color: var(--color-card-text);
+    // }
+
+    // .p-select-option:not(.p-select-option-selected):not(.p-disabled).p-focus,
+    // .p-select-option:hover {
+    //     background: var(--p-primary-500);
+    // }
+
+    // .p-select-option-selected {
+    //     background: var(--p-primary-700);
+    // }
+
+    // .p-select-label {
+    //     color: var(--color-input-text);
+    // }
+}
