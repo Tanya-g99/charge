@@ -70,7 +70,7 @@ const exportToCSV = () => {
 
 <template>
     <div class="table-container">
-        <div class="table-top">
+        <div v-if="export" class="table-top">
             <Button v-if="export" icon="pi pi-download" label="Export to CSV" @click="exportToCSV" />
         </div>
 
@@ -78,8 +78,9 @@ const exportToCSV = () => {
             :rowsPerPageOptions="props.pageOptions" scrollable scrollHeight="100%" paginator :rows="pageSize"
             stripedRows
             paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
-            currentPageReportTemplate="{currentPage} / {totalPages}" class="p-datatable-striped p-datatable-gridlines"
-            :totalRecords="props.totalRecords" @page="onPageChange">
+            currentPageReportTemplate="{currentPage} / {totalPages}"
+            class="table-h-full p-datatable-striped p-datatable-gridlines" :totalRecords="props.totalRecords"
+            @page="onPageChange">
 
             <Column v-for="col in props.columns" :key="col.field" :field="col.field" :header="col.title"
                 :sortable="col.sortable">
@@ -93,12 +94,13 @@ const exportToCSV = () => {
     height: 100%;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: var(--page-gap);
 
 
     .table-top {
         display: flex;
         justify-content: flex-end;
+        gap: var(--page-gap);
     }
 }
 </style>

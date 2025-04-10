@@ -40,20 +40,15 @@
     //     color: var(--color-button-text);
     // }
 
-    .p-multiselect-panel {
+    .p-multiselect-header {
+        position: relative;
+        min-width: 151px;
 
-        .p-checkbox {
-
-            &::after {
-                content: "Select All";
-            }
-        }
-
-        .p-multiselect-close-icon {
-
-            &::before {
-                display: none;
-            }
+        .p-checkbox::after {
+            position: absolute;
+            content: 'Выбрать все';
+            left: 30px;
+            text-wrap: nowrap;
         }
     }
 
@@ -63,7 +58,7 @@
         .p-datatable {
             display: flex;
             flex-direction: column;
-            height: 100% !important;
+            max-height: 100% !important;
             justify-content: space-between;
             border-width: 1px;
         }
@@ -72,6 +67,12 @@
             display: flex;
             justify-content: end;
             border-width: 1px;
+        }
+    }
+
+    .table-h-full {
+        .p-datatable {
+            height: 100% !important;
         }
     }
 
@@ -119,10 +120,10 @@
     //     background-color: var(--color-table-row);
     // }
 
-    // // Pagination
-    // .p-paginator {
-    //     background-color: var(--color-bg);
-    // }
+    // Pagination
+    .p-paginator {
+        width: 100%;
+    }
 
     // .p-paginator-page,
     // .p-paginator-next,

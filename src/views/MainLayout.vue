@@ -61,7 +61,7 @@ const toggleTheme = () => {
   display: flex;
   justify-content: centers;
   background-color: var(--color-menu-bg);
-  height: 2rem;
+  height: var(--menu-height);
   z-index: 9999;
 
 
@@ -99,6 +99,6 @@ const toggleTheme = () => {
   margin: 0 auto;
   height: 100%;
   min-height: min-content;
-  padding: var(--page-padding) var(--page-padding) calc(2*var(--page-padding));
+  padding: calc(var(--menu-height) + var(--page-padding)) var(--page-padding) var(--page-padding);
 }
 </style>

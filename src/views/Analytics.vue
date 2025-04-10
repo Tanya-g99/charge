@@ -9,6 +9,7 @@ import Table from 'components/PrimeTable2.vue';
 import Chart from 'components/Chart.vue';
 import Card from 'primevue/card';
 import _ from "lodash";
+import { Stations } from '@/lib/Stations';
 
 const statusOptions = ref([
     { label: 'Активна', value: 1 },
@@ -20,10 +21,7 @@ const connectorOptions = ref([
     { label: 'Тип 2', value: 2 },
     { label: 'Тип 3', value: 3 }
 ]);
-const stationOptions = ref([
-    { label: 'Станция A', value: 1 },
-    { label: 'Станция B', value: 2 }
-]);
+const stationOptions = ref();
 
 const selectedStatus = ref([]);
 const selectedConnectors = ref([]);
@@ -44,34 +42,38 @@ const currentPage = ref(1);
 const pageSize = ref(10);
 
 const columns = ref([
-    { field: 'station.id', title: 'Станция', sortable: true },
+    { field: 'station_id', title: 'Станция', sortable: true },
     { field: 'connector_id', title: 'Коннектор' },
     { field: 'period.from', title: 'Начало', sortable: true },
     { field: 'period.to', title: 'Окончание', sortable: true },
     { field: 'status', title: 'Статус', sortable: true },
-    { field: 'power', title: 'Мощность (кВт)' },
-    { field: 'consumption', title: 'Потребление (кВт·ч)' }
+    { field: 'consumption', title: 'Потребление (кВт·ч)', sortable: true }
 ]);
 
 const fetchSessions = async () => {
     const response = await axios.post('api', {
-        command: 'get_sessions',
-        connector_types: selectedConnectors.value,
-        period: {
-            from: period.value[0] ? period.value[0].toISOString().split('T')[0] : null,
-            to: period.value[1] ? period.value[1].toISOString().split('T')[0] : null
+        "command": 'get_sessions',
+        "token": "5IyJPkWJa3ci50t8em4dEmCmoDHFSQVY",
+        "connector_types": selectedConnectors.value,
+        "period": {
+            "from": period.value[0] ? period.value[0].toISOString().split('T')[0] : null,
+            "to": period.value[1] ? period.value[1].toISOString().split('T')[0] : null
         },
-        status: selectedStatus.value,
-        stations: selectedStations.value,
-        search: searchQuery.value,
-        page: currentPage.value,
-        max_elements: pageSize.value,
-        details: [{ station: {} }]
+        "status": selectedStatus.value,
+        "stations": selectedStations.value,
+        "page": currentPage.value,
+        "max_elements": pageSize.value,
+        "details": [{ "station": {} }]
     });
 
     if (response.data.response_code === 0) {
         sessions.value = response.data.sessions;
         totalSessions.value = response.data.total || 0;
+        console.log(sessions.value)
+        const sessionAnalysis = generateTestChartData();
+        chartData.value = sessionAnalysis.days;
+        chartDesc.value = _.pick(sessionAnalysis, ["session_count", "average_session_duration", "average_session_count", "average_session_consumption"]);
+
     } else {
         console.log(currentPage.value, pageSize.value)
         sessions.value = generateTestSessions(currentPage.value, pageSize.value);
@@ -145,7 +147,7 @@ function generateTestChartData(numDays = 30) {
     return response;
 }
 
-watch([selectedStatus, selectedConnectors, selectedStations, period, searchQuery, currentPage], fetchSessions);
+watch([selectedStatus, selectedConnectors, selectedStations, period, currentPage], fetchSessions);
 
 const onPageChange = (page, size) => {
     currentPage.value = page;
@@ -153,7 +155,12 @@ const onPageChange = (page, size) => {
     fetchSessions();
 };
 
-onMounted(fetchSessions);
+onMounted(async () => {
+    stationOptions.value = (await Stations.get()).map(station => {
+        return { label: station.id, value: station.id }
+    });
+    fetchSessions();
+});
 </script>
 
 <template>
@@ -161,22 +168,19 @@ onMounted(fetchSessions);
         <!-- Фильтры -->
         <div class="filters">
             <div class="selects">
-                <MultiSelect v-model="selectedStatus" :options="statusOptions" optionLabel="label" optionValue="value"
-                    placeholder="Статус" />
-                <MultiSelect v-model="selectedConnectors" :options="connectorOptions" optionLabel="label"
-                    optionValue="value" placeholder="Тип коннектора" />
-                <MultiSelect v-model="selectedStations" :options="stationOptions" optionLabel="label"
-                    optionValue="value" placeholder="Станция" />
+                <MultiSelect v-model="selectedStatus" autoOptionFocus="false" :options="statusOptions"
+                    optionLabel="label" optionValue="value" placeholder="Статус" />
+                <MultiSelect v-model="selectedConnectors" autoOptionFocus="false" :options="connectorOptions"
+                    optionLabel="label" optionValue="value" placeholder="Тип коннектора" />
+                <MultiSelect v-model="selectedStations" autoOptionFocus="false" :options="stationOptions"
+                    optionLabel="label" optionValue="value" placeholder="Станция" />
                 <Calendar v-model="period" selectionMode="range" placeholder="Выберите период" :manualInput="false"
                     showIcon />
             </div>
 
             <!-- Поиск и чекбоксы -->
-            <div class="search-and-checkboxes w-full">
+            <div class="search-and-checkboxes">
                 <InputText class="w-full" v-model="searchQuery" placeholder="Поиск..." />
-                <!-- <div class="checkboxes">
-                    <Checkbox v-model="checkbox1" binary /> <label>Опция 1</label>
-                </div> -->
             </div>
         </div>
         <div class="table-container">
@@ -222,8 +226,8 @@ onMounted(fetchSessions);
 <style scoped>
 .session-analyzer {
     display: grid;
-    grid-template-rows: auto minmax(200px, 1fr) auto auto;
-    gap: 16px;
+    grid-template-rows: auto minmax(400px, 1fr) auto auto;
+    gap: var(--page-large-gap);
     height: 100%;
     position: relative;
 
@@ -231,8 +235,9 @@ onMounted(fetchSessions);
     .filters {
         display: flex;
         flex-direction: column;
-        gap: 16px;
-        padding: 16px;
+        gap: var(--page-gap);
+        width: fit-content;
+
 
         .selects,
         .search-and-checkboxes {
@@ -273,14 +278,39 @@ onMounted(fetchSessions);
 
                 p {
                     font-weight: bold;
-                    font-size: 2rem;
+                }
+
+                @media (min-width: 768px) {
+                    p {
+                        font-size: 2rem;
+                    }
                 }
             }
         }
     }
+}
 
+@media (max-width: 768px) {
+    .session-analyzer {
 
+        .filters {
+            width: 100%;
 
+            .selects {
+                flex-direction: column;
+                align-items: stretch;
+            }
 
+        }
+
+        .chart-container {
+            grid-template-columns: 1fr;
+
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+    }
 }
 </style>

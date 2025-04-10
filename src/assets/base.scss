@@ -93,7 +93,7 @@
   }
 
   /* === Блок 2: Светлая тема === */
-  [data-theme="light"] {
+  html {
     --color-background: var(--color-light-300);
     --color-background-soft: var(--color-light-100);
     --color-background-muted: var(--color-light-200);
@@ -161,7 +161,7 @@
   }
 
   /* === Блок 3: Тёмная тема === */
-  [data-theme="dark"] {
+  html.dark {
     --color-background: var(--color-dark-300);
     --color-background-soft: var(--color-dark-100);
     --color-background-muted: var(--color-dark-200);
@@ -243,8 +243,17 @@
     --cadr-radius: 4px;
     --cadr-large-radius: 8px;
 
+    --menu-height: 2rem;
     --page-padding: 2rem;
+    --page-gap: 8px;
+    --page-large-gap: 16px;
+
+
+    @media (max-width: 768px) {
+      --page-padding: 1rem;
+    }
   }
+
 
   *,
   *::before,
@@ -255,8 +264,8 @@
 
   body {
     min-height: 100vh;
-    color: var(--color-text);
-    background: var(--color-background);
+    // color: var(--color-text);
+    // background: var(--color-background);
     transition: color 0.5s,
       background-color 0.5s;
     line-height: 1.6;
