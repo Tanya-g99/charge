@@ -3,6 +3,7 @@ import { ref, computed, watch, defineEmits } from 'vue';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import Button from 'primevue/button';
+import Paginator from 'primevue/paginator';
 
 // Пропсы
 const props = defineProps({
@@ -16,7 +17,7 @@ const props = defineProps({
     },
     pageOptions: {
         type: Array,
-        default: () => [5, 10, 20, 50]
+        default: () => [5, 10, 20, 30]
     },
     pageSize: {
         type: Number,
@@ -43,9 +44,11 @@ const sortAscending = ref(true);
 const pageSize = ref(props.pageSize);
 
 const onPageChange = (event) => {
-    const newPage = event.page + 1;
+    let newPage = event.page + 1;
     const newPageSize = event.rows;
-
+    if (props.pageSize != newPageSize) {
+        newPage = 1;
+    }
     emit('pageChange', newPage, newPageSize);
 };
 
@@ -74,18 +77,22 @@ const exportToCSV = () => {
             <Button v-if="export" icon="pi pi-download" label="Export to CSV" @click="exportToCSV" />
         </div>
 
-        <DataTable :value="data" :sortField="sortColumn" :sortOrder="sortAscending ? 1 : -1" removableSort
-            :rowsPerPageOptions="props.pageOptions" scrollable scrollHeight="100%" paginator :rows="pageSize"
-            stripedRows
-            paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
-            currentPageReportTemplate="{currentPage} / {totalPages}"
-            class="table-h-full p-datatable-striped p-datatable-gridlines" :totalRecords="props.totalRecords"
-            @page="onPageChange">
+        <DataTable :value="data" :sortField="sortColumn" :sortOrder="sortAscending ? 1 : -1" removableSort scrollable
+            scrollHeight="100%" stripedRows class=" table-h-full p-datatable-striped p-datatable-gridlines">
 
             <Column v-for="col in props.columns" :key="col.field" :field="col.field" :header="col.title"
                 :sortable="col.sortable">
             </Column>
+
+            <template #footer>
+                <Paginator :rows="pageSize" :totalRecords="props.totalRecords" :rowsPerPageOptions="props.pageOptions"
+                    @page="onPageChange"
+                    template="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+                    currentPageReportTemplate="{currentPage} / {totalPages}" />
+            </template>
         </DataTable>
+
+
     </div>
 </template>
 

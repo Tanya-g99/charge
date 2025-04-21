@@ -27,7 +27,7 @@ function generateTestData(page = 1, max_elements = 10, total = 10) {
 }
 
 export const Stations = {
-    getByPage: async (page, pageSize, total) => {
+    getByPage: async (page, pageSize) => {
         const response = await axios.post('api', {
             "command": "get_stations",
             "token": "5IyJPkWJa3ci50t8em4dEmCmoDHFSQVY",
@@ -36,10 +36,10 @@ export const Stations = {
         });
 
         if (response.data.response_code === 0) {
-            return response.data.stations;
+            return response.data;
         } else {
             console.log(response.data)
-            return generateTestData(page, pageSize, total);
+            return generateTestData(page, pageSize, 100);
         }
     },
     get: async () => {

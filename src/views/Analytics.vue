@@ -69,13 +69,14 @@ const fetchSessions = async () => {
         "details": [{ "station": {} }]
     });
 
-    if (response.data.response_code === 0) {
+    if (response.data.response_code == 0) {
         sessions.value = response.data.sessions;
+        console.log("OK sessions", response.data)
         totalSessions.value = response.data.total || 0;
-
     } else {
-        console.log(currentPage.value, pageSize.value)
+        console.log("FAIL sessions", response.data)
         sessions.value = generateTestSessions(currentPage.value, pageSize.value);
+        totalSessions.value = sessions.total || 0;
     }
 
     const responseChartData = await axios.post('api', {
@@ -162,7 +163,7 @@ function generateTestChartData(numDays = 30) {
         });
     }
 
-    response.session_count = totalSessions;
+    response.total = totalSessions;
 
     return response;
 }
@@ -189,6 +190,7 @@ onMounted(async () => {
     <div class="session-analyzer">
         <!-- Фильтры -->
         <div class="filters">
+            {{ totalSessions }}
             <div class="selects">
                 <MultiSelect v-model="selectedStatus" autoOptionFocus="false" :options="statusOptions"
                     optionLabel="label" optionValue="value" placeholder="Статус" />
@@ -206,8 +208,8 @@ onMounted(async () => {
             </div>
         </div>
         <div class="table-container">
-            <Table :data="sessions" :columns="columns" :pageOptions="[5, 10, 20, 50]" :currentPage="currentPage"
-                :pageSize="pageSize" :totalRecords="totalSessions" @pageChange="onPageChange" />
+            <Table :data="sessions" :columns="columns" :currentPage="currentPage" :pageSize="pageSize"
+                :totalRecords="totalSessions" @pageChange="onPageChange" />
         </div>
         <p>Статистика:</p>
         <div v-if="loading" style="height: 600px;">

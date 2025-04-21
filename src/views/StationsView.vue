@@ -16,22 +16,27 @@ const columns = ref([
 const stations = ref([]);
 const currentPage = ref(1);
 const pageSize = ref(10);
-const totalRecords = ref(100);
+const totalRecords = ref(0);
 
 // Обработчик изменения страницы и размера страницы
 const handlePageChange = async (page, size) => {
   currentPage.value = page;
   pageSize.value = size;
-  stations.value = await Stations.getByPage(currentPage.value, pageSize.value, totalRecords.value);
+
+  const response = await Stations.getByPage(currentPage.value, pageSize.value);
+  stations.value = response.stations;
+  totalRecords.value = response.total;
 };
 
 onMounted(async () => {
-  stations.value = await Stations.getByPage(currentPage.value, pageSize.value, totalRecords.value);
-  console.log(stations.value)
+  const response = await Stations.getByPage(currentPage.value, pageSize.value);
+  console.log(response)
+  stations.value = response.stations;
+  totalRecords.value = response.total;
 });
 </script>
 
 <template>
   <PrimeTable class="table-h-full" :data="stations" :columns="columns" :currentPage="currentPage" :pageSize="pageSize"
-    :totalRecords="totalRecords" :pageOptions="[5, 10, 20, 50]" @pageChange="handlePageChange" export />
+    :totalRecords="totalRecords" @pageChange="handlePageChange" export />
 </template>
