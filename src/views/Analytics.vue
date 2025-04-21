@@ -59,8 +59,8 @@ const fetchSessions = async () => {
         "token": "5IyJPkWJa3ci50t8em4dEmCmoDHFSQVY",
         "connector_types": selectedConnectors.value,
         "period": {
-            "from": period.value[0] ? period.value[0].toISOString().split('T')[0] : null,
-            "to": period.value[1] ? period.value[1].toISOString().split('T')[0] : null
+            "from": period.value[0] ? period.value[0].toLocaleDateString('en-CA') : null,
+            "to": period.value[1] ? period.value[1].toLocaleDateString('en-CA') : null
         },
         "status": selectedStatus.value,
         "stations": selectedStations.value,
@@ -72,7 +72,6 @@ const fetchSessions = async () => {
     if (response.data.response_code === 0) {
         sessions.value = response.data.sessions;
         totalSessions.value = response.data.total || 0;
-        console.log(sessions.value)
 
     } else {
         console.log(currentPage.value, pageSize.value)
@@ -83,14 +82,13 @@ const fetchSessions = async () => {
         "command": "get_session_analysis",
         "token": "5IyJPkWJa3ci50t8em4dEmCmoDHFSQVY",
         "period": {
-            "from": period.value[0] ? period.value[0].toISOString().split('T')[0] : null,
-            "to": period.value[1] ? period.value[1].toISOString().split('T')[0] : null
+            "from": period.value[0] ? period.value[0].toLocaleDateString('en-CA') : null,
+            "to": period.value[1] ? period.value[1].toLocaleDateString('en-CA') : null
         },
     });
 
     if (responseChartData.data.response_code === 0) {
         const sessionAnalysis = responseChartData.data;
-        console.log("sessionAnalysis", sessionAnalysis)
         chartData.value = sessionAnalysis.days.map(item => {
             const { session_count, ...rest } = item;
             return { ...rest, value: session_count };
@@ -98,6 +96,7 @@ const fetchSessions = async () => {
         chartDesc.value = _.pick(sessionAnalysis, ["session_count", "average_session_duration", "average_session_count", "average_session_consumption"]);
 
     } else {
+        console.log("responseChartData", responseChartData)
         const sessionAnalysis = generateTestChartData();
         chartData.value = sessionAnalysis.days;
         chartDesc.value = _.pick(sessionAnalysis, ["session_count", "average_session_duration", "average_session_count", "average_session_consumption"]);
@@ -240,7 +239,7 @@ onMounted(async () => {
                 <Card class="info-card">
                     <template #header>Среднее потребление:</template>
                     <template #content>
-                        <p>{{ chartDesc.average_session_consumption }}</p> кВт·ч
+                        <p>{{ chartDesc.average_session_consumption }}</p> Вт·ч
                     </template>
                 </Card>
             </div>
