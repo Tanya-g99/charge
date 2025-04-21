@@ -10,7 +10,9 @@ import Chart from 'components/Chart.vue';
 import Card from 'primevue/card';
 import _ from "lodash";
 import { Stations } from '@/lib/Stations';
+import Loading from '@/components/Loading.vue';
 
+const loading = ref(true)
 const statusOptions = ref([
     { label: 'Активна', value: 1 },
     { label: 'Завершена', value: 2 },
@@ -47,10 +49,11 @@ const columns = ref([
     { field: 'period.from', title: 'Начало', sortable: true },
     { field: 'period.to', title: 'Окончание', sortable: true },
     { field: 'status', title: 'Статус', sortable: true },
-    { field: 'consumption', title: 'Потребление (кВт·ч)', sortable: true }
+    { field: 'consumption', title: 'Потребление (Вт·ч)', sortable: true }
 ]);
 
 const fetchSessions = async () => {
+    loading.value = true
     const response = await axios.post('api', {
         "command": 'get_sessions',
         "token": "5IyJPkWJa3ci50t8em4dEmCmoDHFSQVY",
@@ -70,19 +73,37 @@ const fetchSessions = async () => {
         sessions.value = response.data.sessions;
         totalSessions.value = response.data.total || 0;
         console.log(sessions.value)
-        const sessionAnalysis = generateTestChartData();
-        chartData.value = sessionAnalysis.days;
-        chartDesc.value = _.pick(sessionAnalysis, ["session_count", "average_session_duration", "average_session_count", "average_session_consumption"]);
 
     } else {
         console.log(currentPage.value, pageSize.value)
         sessions.value = generateTestSessions(currentPage.value, pageSize.value);
+    }
 
+    const responseChartData = await axios.post('api', {
+        "command": "get_session_analysis",
+        "token": "5IyJPkWJa3ci50t8em4dEmCmoDHFSQVY",
+        "period": {
+            "from": period.value[0] ? period.value[0].toISOString().split('T')[0] : null,
+            "to": period.value[1] ? period.value[1].toISOString().split('T')[0] : null
+        },
+    });
+
+    if (responseChartData.data.response_code === 0) {
+        const sessionAnalysis = responseChartData.data;
+        console.log("sessionAnalysis", sessionAnalysis)
+        chartData.value = sessionAnalysis.days.map(item => {
+            const { session_count, ...rest } = item;
+            return { ...rest, value: session_count };
+        });
+        chartDesc.value = _.pick(sessionAnalysis, ["session_count", "average_session_duration", "average_session_count", "average_session_consumption"]);
+
+    } else {
         const sessionAnalysis = generateTestChartData();
         chartData.value = sessionAnalysis.days;
         chartDesc.value = _.pick(sessionAnalysis, ["session_count", "average_session_duration", "average_session_count", "average_session_consumption"]);
     }
 
+    loading.value = false;
 };
 
 const generateTestSessions = (page, size) => {
@@ -188,7 +209,11 @@ onMounted(async () => {
                 :pageSize="pageSize" :totalRecords="totalSessions" @pageChange="onPageChange" />
         </div>
         <p>Статистика:</p>
-        <div class="chart-container">
+        <div v-if="loading" style="height: 600px;">
+            <Loading />
+        </div>
+
+        <div v-else class="chart-container">
             <Chart style="height: 100%;" :dataPoints="chartData" />
 
             <div v-if="Object.keys(chartDesc).length" class="cards-container">

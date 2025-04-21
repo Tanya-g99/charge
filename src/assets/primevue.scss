@@ -1,5 +1,12 @@
 @layer base {
 
+    :root {
+        --p-progressspinner-color-one: var(--p-primary-900);
+        --p-progressspinner-color-two: var(--p-primary-900);
+        --p-progressspinner-color-three: var(--p-primary-900);
+        --p-progressspinner-color-four: var(--p-primary-900);
+    }
+
     // // Form
     // .p-multiselect,
     // .p-inputtext,

@@ -1,5 +1,4 @@
 <script setup>
-import axios from 'axios';
 import { onMounted, ref, computed } from 'vue';
 import PrimeTable from 'components/PrimeTable2.vue';
 import { Stations } from '@/lib/Stations';
@@ -14,7 +13,6 @@ const columns = ref([
   { field: 'status', title: 'Статус', sortable: true },
 ]);
 
-// Состояние для хранения станций
 const stations = ref([]);
 const currentPage = ref(1);
 const pageSize = ref(10);
