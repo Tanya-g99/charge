@@ -168,7 +168,9 @@ function generateTestChartData(numDays = 30) {
     return response;
 }
 
-watch([selectedStatus, selectedConnectors, selectedStations, period, currentPage], fetchSessions);
+watch([selectedStatus, selectedConnectors, selectedStations, () => period.value[1], currentPage], () => {
+    if (period.value[1] != null) fetchSessions();
+});
 
 const onPageChange = (page, size) => {
     currentPage.value = page;
@@ -196,7 +198,7 @@ onMounted(async () => {
                 <MultiSelect v-model="selectedStations" autoOptionFocus="false" :options="stationOptions"
                     optionLabel="label" optionValue="value" placeholder="Станция" />
                 <Calendar v-model="period" selectionMode="range" placeholder="Выберите период" :manualInput="false"
-                    showIcon />
+                    showIcon :maxDate="new Date()" />
             </div>
 
             <!-- Поиск и чекбоксы -->
