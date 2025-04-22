@@ -190,7 +190,6 @@ onMounted(async () => {
     <div class="session-analyzer">
         <!-- Фильтры -->
         <div class="filters">
-            {{ totalSessions }}
             <div class="selects">
                 <MultiSelect v-model="selectedStatus" autoOptionFocus="false" :options="statusOptions"
                     optionLabel="label" optionValue="value" placeholder="Статус" />
