@@ -60,7 +60,7 @@ watch(() => props.dataPoints, updateChartData, { immediate: true });
 </script>
 
 <template>
-    <Chart type="line" :data="chartData" :options="chartOptions" />
+    <Chart type="bar" :data="chartData" :options="chartOptions" />
 </template>
 
 <style scoped></style>

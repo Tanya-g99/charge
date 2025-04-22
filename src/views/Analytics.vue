@@ -78,7 +78,10 @@ const fetchSessions = async () => {
         sessions.value = generateTestSessions(currentPage.value, pageSize.value);
         totalSessions.value = sessions.total || 0;
     }
-
+    console.log("SEND ANALYSIS", {
+        "from": period.value[0] ? period.value[0].toLocaleDateString('en-CA') : null,
+        "to": period.value[1] ? period.value[1].toLocaleDateString('en-CA') : null
+    })
     const responseChartData = await axios.post('api', {
         "command": "get_session_analysis",
         "token": "5IyJPkWJa3ci50t8em4dEmCmoDHFSQVY",
@@ -94,6 +97,7 @@ const fetchSessions = async () => {
             const { session_count, ...rest } = item;
             return { ...rest, value: session_count };
         });
+        console.log("GET ANALYSIS", sessionAnalysis)
         chartDesc.value = _.pick(sessionAnalysis, ["session_count", "average_session_duration", "average_session_count", "average_session_consumption"]);
 
     } else {
