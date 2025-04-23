@@ -4,6 +4,7 @@ import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import Button from 'primevue/button';
 import Paginator from 'primevue/paginator';
+import Loading from '@/components/Loading.vue';
 
 // Пропсы
 const props = defineProps({
@@ -17,7 +18,7 @@ const props = defineProps({
     },
     pageOptions: {
         type: Array,
-        default: () => [5, 10, 20, 30]
+        default: () => [5, 10, 20, 40]
     },
     pageSize: {
         type: Number,
@@ -34,11 +35,16 @@ const props = defineProps({
     export: {
         type: Boolean,
         default: false
+    },
+    loading: {
+        type: Boolean,
+        default: false
     }
 });
 
 const emit = defineEmits(['pageChange']);
 
+const dt = ref()
 const sortColumn = ref(null);
 const sortAscending = ref(true);
 const pageSize = ref(props.pageSize);
@@ -74,16 +80,21 @@ const exportToCSV = () => {
 <template>
     <div class="table-container">
         <div v-if="export" class="table-top">
-            <Button v-if="export" icon="pi pi-download" label="Export to CSV" @click="exportToCSV" />
+            <Button v-if="export" icon="pi pi-download" label="Export to CSV" @click="dt.exportCSV($event)" />
         </div>
 
-        <DataTable :value="data" :sortField="sortColumn" :sortOrder="sortAscending ? 1 : -1" removableSort scrollable
-            scrollHeight="100%" stripedRows class=" table-h-full p-datatable-striped p-datatable-gridlines">
+        <DataTable ref="dt" :value="data" :loading="loading" :sortField="sortColumn" :sortOrder="sortAscending ? 1 : -1"
+            removableSort scrollable scrollHeight="100%" stripedRows class="p-datatable-striped p-datatable-gridlines">
 
             <Column v-for="col in props.columns" :key="col.field" :field="col.field" :header="col.title"
                 :sortable="col.sortable">
             </Column>
 
+            <template #empty>
+                <div class="data-empty">
+                    Нет данных для отображения
+                </div>
+            </template>
             <template #footer>
                 <Paginator :rows="pageSize" :totalRecords="props.totalRecords" :rowsPerPageOptions="props.pageOptions"
                     @page="onPageChange"
@@ -108,6 +119,10 @@ const exportToCSV = () => {
         display: flex;
         justify-content: flex-end;
         gap: var(--page-gap);
+    }
+
+    .data-empty {
+        text-align: center;
     }
 }
 </style>

@@ -4,15 +4,20 @@ import axios from 'axios';
 import Calendar from 'primevue/calendar';
 import MultiSelect from 'primevue/multiselect';
 import InputText from 'primevue/inputtext';
+import InputGroup from 'primevue/inputgroup';
+import InputGroupAddon from 'primevue/inputgroupaddon';
+import Button from 'primevue/button';
+import InputIcon from 'primevue/inputicon';
 import Checkbox from 'primevue/checkbox';
-import Table from 'components/PrimeTable2.vue';
-import Chart from 'components/Chart.vue';
 import Card from 'primevue/card';
 import _ from "lodash";
-import { Stations } from '@/lib/Stations';
-import Loading from '@/components/Loading.vue';
 
-const loading = ref(true)
+import { Stations } from 'lib/Stations';
+import Loading from 'components/Loading.vue';
+import Table from 'components/PrimeTable2.vue';
+import Chart from 'components/Chart.vue';
+
+const loading = ref(true);
 const statusOptions = ref([
     { label: 'Активна', value: 1 },
     { label: 'Завершена', value: 2 },
@@ -32,7 +37,8 @@ const period = ref([
     new Date(new Date().setMonth(new Date().getMonth() - 1)),
     new Date()
 ]);
-const searchQuery = ref('');
+const addressSearch = ref('');
+const search = ref('');
 const checkbox1 = ref(false);
 
 const chartData = ref([]);
@@ -54,7 +60,8 @@ const columns = ref([
 
 const fetchSessions = async () => {
     loading.value = true
-    const response = await axios.post('api', {
+
+    const request = {
         "command": 'get_sessions',
         "token": "5IyJPkWJa3ci50t8em4dEmCmoDHFSQVY",
         "connector_types": selectedConnectors.value,
@@ -66,9 +73,10 @@ const fetchSessions = async () => {
         "stations": selectedStations.value,
         "page": currentPage.value,
         "max_elements": pageSize.value,
-        "details": [{ "station": {} }]
-    });
-
+        "station_address": search.value,
+    }
+    const response = await axios.post('api', request);
+    console.log("SEND sessions", request)
     if (response.data.response_code == 0) {
         sessions.value = response.data.sessions;
         console.log("OK sessions", response.data)
@@ -108,6 +116,7 @@ const fetchSessions = async () => {
     }
 
     loading.value = false;
+    console.log("END", new Date().toTimeString())
 };
 
 const generateTestSessions = (page, size) => {
@@ -172,7 +181,7 @@ function generateTestChartData(numDays = 30) {
     return response;
 }
 
-watch([selectedStatus, selectedConnectors, selectedStations, () => period.value[1], currentPage], () => {
+watch([selectedStatus, selectedConnectors, selectedStations, addressSearch, () => period.value[1], currentPage], () => {
     if (period.value[1] != null) fetchSessions();
 });
 
@@ -195,11 +204,11 @@ onMounted(async () => {
         <!-- Фильтры -->
         <div class="filters">
             <div class="selects">
-                <MultiSelect v-model="selectedStatus" autoOptionFocus="false" :options="statusOptions"
+                <MultiSelect v-model="selectedStatus" :autoOptionFocus="false" :options="statusOptions"
                     optionLabel="label" optionValue="value" placeholder="Статус" />
-                <MultiSelect v-model="selectedConnectors" autoOptionFocus="false" :options="connectorOptions"
+                <MultiSelect v-model="selectedConnectors" :autoOptionFocus="false" :options="connectorOptions"
                     optionLabel="label" optionValue="value" placeholder="Тип коннектора" />
-                <MultiSelect v-model="selectedStations" autoOptionFocus="false" :options="stationOptions"
+                <MultiSelect v-model="selectedStations" :autoOptionFocus="false" :options="stationOptions"
                     optionLabel="label" optionValue="value" placeholder="Станция" />
                 <Calendar v-model="period" selectionMode="range" placeholder="Выберите период" :manualInput="false"
                     showIcon :maxDate="new Date()" />
@@ -207,12 +216,18 @@ onMounted(async () => {
 
             <!-- Поиск и чекбоксы -->
             <div class="search-and-checkboxes">
-                <InputText class="w-full" v-model="searchQuery" placeholder="Поиск..." />
+                <InputGroup>
+                    <InputText class="w-full" v-model="search" placeholder="Поиск..."
+                        @keyup.enter="addressSearch = search" />
+                    <InputGroupAddon>
+                        <Button icon="pi pi-search" severity="secondary" @click="addressSearch = search" />
+                    </InputGroupAddon>
+                </InputGroup>
             </div>
         </div>
         <div class="table-container">
-            <Table :data="sessions" :columns="columns" :currentPage="currentPage" :pageSize="pageSize"
-                :totalRecords="totalSessions" @pageChange="onPageChange" />
+            <Table :loading="loading" :data="sessions" :columns="columns" :currentPage="currentPage"
+                :pageSize="pageSize" :totalRecords="totalSessions" @pageChange="onPageChange" />
         </div>
         <p>Статистика:</p>
         <div v-if="loading" style="height: 600px;">

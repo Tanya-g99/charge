@@ -20,7 +20,7 @@ onMounted(() => {
   if (savedTheme) {
     currentTheme.value = savedTheme
   } else {
-    currentTheme.value = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    currentTheme.value = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'
   }
 
   if (currentTheme.value === 'dark')

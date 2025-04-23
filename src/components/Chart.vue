@@ -47,7 +47,7 @@ const updateChartData = () => {
                 label: 'Сессий',
                 data: props.dataPoints.map(point => point.value),
                 borderColor: 'rgba(21, 81, 150, 1)',
-                backgroundColor: 'rgba(21, 81, 150, 0.3)',
+                backgroundColor: 'rgba(21, 81, 150, 0.5)',
                 fill: true,
                 tension: 0.4
             }

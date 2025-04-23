@@ -68,18 +68,36 @@
             max-height: 100% !important;
             justify-content: space-between;
             border-width: 1px;
-        }
 
-        .p-datatable-gridlines .p-datatable-paginator-bottom {
-            display: flex;
-            justify-content: end;
-            border-width: 1px;
+
+
+            .p-datatable-footer {
+                display: flex;
+                justify-content: end;
+                border-width: 1px;
+            }
         }
     }
 
     .table-h-full {
         .p-datatable {
             height: 100% !important;
+        }
+
+        .p-datatable-table-container {
+            height: 100%;
+            position: relative;
+
+            .data-empty {
+                position: absolute;
+                left: 0;
+                top: 0;
+                height: 100%;
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
         }
     }
 
