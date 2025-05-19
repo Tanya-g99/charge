@@ -7,6 +7,10 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 // https://vitejs.dev/config/
 export default defineConfig({
   server: {
+    allowedHosts: [
+      'light.asuno.net',
+      'appcharge.incotexpower.ru'
+    ],
     proxy: {
       "/api": {
         target: "https://charge.incotexpower.ru",
