@@ -4,7 +4,6 @@ import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import Button from 'primevue/button';
 import Paginator from 'primevue/paginator';
-import Loading from '@/components/Loading.vue';
 
 // Пропсы
 const props = defineProps({
@@ -42,7 +41,7 @@ const props = defineProps({
     }
 });
 
-const emit = defineEmits(['pageChange']);
+const emit = defineEmits(['pageChange', "rowClick"]);
 
 const dt = ref()
 const sortColumn = ref(null);
@@ -75,6 +74,13 @@ const exportToCSV = () => {
 
     URL.revokeObjectURL(url);
 };
+
+const onRowClick = (event) => {
+    const rowData = event.data;
+    console.log("row click", rowData);
+    emit('rowClick', rowData);
+};
+
 </script>
 
 <template>
@@ -84,7 +90,8 @@ const exportToCSV = () => {
         </div>
 
         <DataTable ref="dt" :value="data" :loading="loading" :sortField="sortColumn" :sortOrder="sortAscending ? 1 : -1"
-            removableSort scrollable scrollHeight="100%" stripedRows class="p-datatable-striped p-datatable-gridlines">
+            removableSort scrollable scrollHeight="100%" stripedRows class="p-datatable-striped p-datatable-gridlines"
+            @row-click="onRowClick">
 
             <Column v-for="col in props.columns" :key="col.field" :field="col.field" :header="col.title"
                 :sortable="col.sortable">

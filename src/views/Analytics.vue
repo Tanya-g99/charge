@@ -7,15 +7,13 @@ import InputText from 'primevue/inputtext';
 import InputGroup from 'primevue/inputgroup';
 import InputGroupAddon from 'primevue/inputgroupaddon';
 import Button from 'primevue/button';
-import InputIcon from 'primevue/inputicon';
-import Checkbox from 'primevue/checkbox';
-import Card from 'primevue/card';
 import _ from "lodash";
 
 import { Stations } from 'lib/Stations';
+import { Sessions } from 'lib/Sessions';
 import Loading from 'components/Loading.vue';
 import Table from 'components/PrimeTable2.vue';
-import Chart from 'components/Chart.vue';
+import SessionsChart from 'components/SessionsChart.vue';
 
 const loading = ref(true);
 const statusOptions = ref([
@@ -24,9 +22,8 @@ const statusOptions = ref([
     { label: 'Ошибка', value: 3 }
 ]);
 const connectorOptions = ref([
-    { label: 'Тип 1', value: 1 },
-    { label: 'Тип 2', value: 2 },
-    { label: 'Тип 3', value: 3 }
+    { label: '1', value: 1 },
+    { label: '2', value: 2 },
 ]);
 const stationOptions = ref();
 
@@ -39,7 +36,6 @@ const period = ref([
 ]);
 const addressSearch = ref('');
 const search = ref('');
-const checkbox1 = ref(false);
 
 const chartData = ref([]);
 const chartDesc = ref({})
@@ -59,127 +55,32 @@ const columns = ref([
 ]);
 
 const fetchSessions = async () => {
-    loading.value = true
+    loading.value = true;
 
-    const request = {
-        "command": 'get_sessions',
-        "token": "5IyJPkWJa3ci50t8em4dEmCmoDHFSQVY",
-        "connector_types": selectedConnectors.value,
-        "period": {
-            "from": period.value[0] ? period.value[0].toLocaleDateString('en-CA') : null,
-            "to": period.value[1] ? period.value[1].toLocaleDateString('en-CA') : null
-        },
-        "status": selectedStatus.value,
-        "stations": selectedStations.value,
-        "page": currentPage.value,
-        "max_elements": pageSize.value,
-        "station_address": search.value,
-    }
-    const response = await axios.post('api', request);
-    console.log("SEND sessions", request)
-    if (response.data.response_code == 0) {
-        sessions.value = response.data.sessions;
-        console.log("OK sessions", response.data)
-        totalSessions.value = response.data.total || 0;
-    } else {
-        console.log("FAIL sessions", response.data)
-        sessions.value = generateTestSessions(currentPage.value, pageSize.value);
-        totalSessions.value = sessions.total || 0;
-    }
-    console.log("SEND ANALYSIS", {
-        "from": period.value[0] ? period.value[0].toLocaleDateString('en-CA') : null,
-        "to": period.value[1] ? period.value[1].toLocaleDateString('en-CA') : null
-    })
-    const responseChartData = await axios.post('api', {
-        "command": "get_session_analysis",
-        "token": "5IyJPkWJa3ci50t8em4dEmCmoDHFSQVY",
-        "period": {
-            "from": period.value[0] ? period.value[0].toLocaleDateString('en-CA') : null,
-            "to": period.value[1] ? period.value[1].toLocaleDateString('en-CA') : null
-        },
+    const sessionData = await Sessions.get({
+        period: period.value,
+        selectedStatus: selectedStatus.value,
+        selectedConnectors: selectedConnectors.value,
+        currentPage: currentPage.value,
+        pageSize: pageSize.value,
+        search: search.value
     });
 
-    if (responseChartData.data.response_code === 0) {
-        const sessionAnalysis = responseChartData.data;
-        chartData.value = sessionAnalysis.days.map(item => {
-            const { session_count, ...rest } = item;
-            return { ...rest, value: session_count };
-        });
-        console.log("GET ANALYSIS", sessionAnalysis)
-        chartDesc.value = _.pick(sessionAnalysis, ["session_count", "average_session_duration", "average_session_count", "average_session_consumption"]);
+    sessions.value = sessionData.sessions;
+    totalSessions.value = sessionData.total || 0;
 
-    } else {
-        console.log("responseChartData", responseChartData)
-        const sessionAnalysis = generateTestChartData();
-        chartData.value = sessionAnalysis.days;
-        chartDesc.value = _.pick(sessionAnalysis, ["session_count", "average_session_duration", "average_session_count", "average_session_consumption"]);
-    }
+    const chartRes = await Sessions.getAnalysis(period.value);
+
+    chartData.value = chartRes.days.map(item => ({ ...item, value: item.session_count || item.value }));
+    chartDesc.value = _.pick(chartRes, [
+        "session_count",
+        "average_session_duration",
+        "average_session_count",
+        "average_session_consumption"
+    ]);
 
     loading.value = false;
-    console.log("END", new Date().toTimeString())
 };
-
-const generateTestSessions = (page, size) => {
-    const testSessions = [];
-    const startIndex = (page - 1) * size;
-    const endIndex = startIndex + size;
-    for (let i = startIndex + 1; i <= endIndex; i++) {
-        testSessions.push({
-            id: i,
-            station: {
-                id: i,
-                latitude: 55.0 + (i * 0.1),
-                longitude: 37.0 + (i * 0.1),
-                status: i % 2,
-                address: `Город ${i}, Улица ${i}`,
-                description: `Описание станции ${i}`,
-                connectors: [1, 2, 3],
-                image_ids: [i, i + 1]
-            },
-            connector_id: (i % 3) + 1,
-            period: {
-                from: `2024-07-${String(i).padStart(2, '0')} 10:00:00`,
-                to: `2024-07-${String(i).padStart(2, '0')} 12:00:00`
-            },
-            status: (i % 3) + 1,
-            power: 20 + (i * 0.5),
-            consumption: 10 + (i * 0.3)
-        });
-    }
-
-    return testSessions;
-};
-
-function generateTestChartData(numDays = 30) {
-    const response = {
-        response_code: 0,
-        days: [],
-        session_count: 0,
-        average_session_duration: "02:02:00",
-        average_session_count: 4,
-        average_session_consumption: 10.0
-    };
-
-    let totalSessions = 0;
-
-    for (let i = 0; i < numDays; i++) {
-        const date = new Date();
-        date.setDate(date.getDate() - i);
-        const formattedDate = date.toLocaleDateString("ru-RU");
-
-        const sessionCount = Math.floor(Math.random() * 10) + 1;
-        totalSessions += sessionCount;
-
-        response.days.push({
-            date: formattedDate,
-            value: sessionCount
-        });
-    }
-
-    response.total = totalSessions;
-
-    return response;
-}
 
 watch([selectedStatus, selectedConnectors, selectedStations, addressSearch, () => period.value[1], currentPage], () => {
     if (period.value[1] != null) fetchSessions();
@@ -207,7 +108,7 @@ onMounted(async () => {
                 <MultiSelect v-model="selectedStatus" :autoOptionFocus="false" :options="statusOptions"
                     optionLabel="label" optionValue="value" placeholder="Статус" />
                 <MultiSelect v-model="selectedConnectors" :autoOptionFocus="false" :options="connectorOptions"
-                    optionLabel="label" optionValue="value" placeholder="Тип коннектора" />
+                    optionLabel="label" optionValue="value" placeholder="Коннектор" />
                 <MultiSelect v-model="selectedStations" :autoOptionFocus="false" :options="stationOptions"
                     optionLabel="label" optionValue="value" placeholder="Станция" />
                 <Calendar v-model="period" selectionMode="range" placeholder="Выберите период" :manualInput="false"
@@ -229,41 +130,13 @@ onMounted(async () => {
             <Table :loading="loading" :data="sessions" :columns="columns" :currentPage="currentPage"
                 :pageSize="pageSize" :totalRecords="totalSessions" @pageChange="onPageChange" />
         </div>
-        <p>Статистика:</p>
+        <p class="title-1">Статистика:</p>
         <div v-if="loading" style="height: 600px;">
             <Loading />
         </div>
 
-        <div v-else class="chart-container">
-            <Chart style="height: 100%;" :dataPoints="chartData" />
+        <SessionsChart v-else :chartData="chartData" :chartDesc="chartDesc" />
 
-            <div v-if="Object.keys(chartDesc).length" class="cards-container">
-                <Card class="info-card">
-                    <template #header>Общее число сессий:</template>
-                    <template #content>
-                        <p>{{ chartDesc.session_count }}</p> шт.
-                    </template>
-                </Card>
-                <Card class="info-card">
-                    <template #header>Средняя длительность:</template>
-                    <template #content>
-                        <p>{{ chartDesc.average_session_duration }}</p> часов
-                    </template>
-                </Card>
-                <Card class="info-card">
-                    <template #header>Среднее число сессий:</template>
-                    <template #content>
-                        <p>{{ chartDesc.average_session_count }}</p> шт.
-                    </template>
-                </Card>
-                <Card class="info-card">
-                    <template #header>Среднее потребление:</template>
-                    <template #content>
-                        <p>{{ chartDesc.average_session_consumption }}</p> Вт·ч
-                    </template>
-                </Card>
-            </div>
-        </div>
     </div>
 
 

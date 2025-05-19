@@ -4,11 +4,11 @@ import { ref, onMounted } from 'vue'
 const links = [
   {
     to: "/stations",
-    name: "Stations Info"
+    name: "Станции"
   },
   {
     to: "/analytics",
-    name: "Stations Analytics"
+    name: "Аналитика сессий"
   }
 ]
 

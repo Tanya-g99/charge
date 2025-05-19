@@ -2,7 +2,9 @@
 import { onMounted, ref, computed } from 'vue';
 import PrimeTable from 'components/PrimeTable2.vue';
 import { Stations } from 'lib/Stations';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 // Столбцы таблицы для станций
 const columns = ref([
   { field: 'id', title: 'ID', sortable: true },
@@ -36,10 +38,15 @@ const handlePageChange = (page, size) => {
   fetchStations();
 };
 
+const rowClick = (station) => {
+  console.log("Stt", station.id)
+  router.push(`/stations/${station.id}`)
+}
+
 onMounted(fetchStations);
 </script>
 
 <template>
   <PrimeTable :loading="loading" class="table-h-full" :data="stations" :columns="columns" :currentPage="currentPage"
-    :pageSize="pageSize" :totalRecords="totalRecords" @pageChange="handlePageChange" export />
+    :pageSize="pageSize" :totalRecords="totalRecords" export @pageChange="handlePageChange" @rowClick="rowClick" />
 </template>
