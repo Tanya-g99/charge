@@ -90,6 +90,9 @@
     --color-table-hover-dark: var(--p-primary-color);
     --color-table-bg-dark: var(--color-table-row-bg-dark);
 
+
+    --color-slider-bg-light: var(--p-surface-200);
+    --color-slider-bg-dark: var(--p-surface-900);
   }
 
   /* === Блок 2: Светлая тема === */
@@ -158,6 +161,8 @@
     --color-table-row: var(--color-table-row-light);
     --color-table-hover: var(--color-table-hover-light);
     --color-table-bg: var(--color-table-bg-light);
+
+    --color-slider-bg: var(--color-slider-bg-light);
   }
 
   /* === Блок 3: Тёмная тема === */
@@ -228,6 +233,8 @@
     --color-table-row: var(--color-table-row-dark);
     --color-table-hover: var(--color-table-hover-dark);
     --color-table-bg: var(--color-table-bg-dark);
+
+    --color-slider-bg: var(--color-slider-bg-dark);
   }
 
   :root {

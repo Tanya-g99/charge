@@ -2,7 +2,7 @@
 import { ref, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import axios from 'axios';
-import Galleria from 'primevue/galleria';
+import Galleria from '@/components/Galleria.vue';
 import Calendar from 'primevue/calendar';
 import MultiSelect from 'primevue/multiselect';
 import Card from 'primevue/card';
@@ -164,17 +164,7 @@ onMounted(async () => {
             </div>
 
             <div class="image-wrapper">
-                <Galleria v-if="imageList.length" :value="imageList" showItemNavigators showItemNavigatorsOnHover
-                    :showThumbnails="false" :numVisible="3" :circular="true" :autoPlay="true" :transitionInterval="4000"
-                    :responsiveOptions="[{}]" :containerStyle="{ height: '100%', withd: '100%' }">
-                    <template #item="slotProps">
-                        <img :src="slotProps.item" class="station-image" />
-                    </template>
-                </Galleria>
-
-                <div v-else class="no-image">
-                    Нет изображения
-                </div>
+                <Galleria :images="imageList"></Galleria>
             </div>
         </div>
 
@@ -244,38 +234,9 @@ onMounted(async () => {
             height: 600px;
             width: 100%;
             min-height: 300px;
-            /* display: flex;
-            justify-content: center;
-            align-items: center; */
 
             @media (max-width: 768px) {
                 height: 300px;
-            }
-
-            .station-image {
-                height: 600px;
-
-                @media (max-width: 768px) {
-                    height: 300px;
-                }
-
-                /* object-fit: contain; */
-                display: block;
-            }
-
-
-            .no-image {
-                width: 100%;
-                height: 100%;
-                font-size: 14px;
-                color: #555;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                background-color: #ccc;
-                text-align: center;
-                padding: 8px;
-                border-radius: 12px;
             }
         }
     }
