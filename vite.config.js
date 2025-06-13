@@ -19,6 +19,9 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/api/, ""),
       },
     },
+    watch: {
+      ignored: ['**/.git/**'],
+    },
   },
   plugins: [
     vue(),

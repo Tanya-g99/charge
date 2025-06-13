@@ -81,7 +81,7 @@ export const Sessions = {
             page: currentPage,
             max_elements: pageSize,
             station_address: search,
-            stations: stationIds || undefined
+            station_ids: stationIds
         };
 
         try {
@@ -89,7 +89,7 @@ export const Sessions = {
             if (response.data.response_code === 0) {
                 return response.data;
             } else {
-                console.warn("Sessions API error:", response.data);
+                console.warn("Sessions API error:", response);
                 return generateTestSessions(currentPage, pageSize, 100);
             }
         } catch (err) {
@@ -98,14 +98,15 @@ export const Sessions = {
         }
     },
 
-    getAnalysis: async (period) => {
+    getAnalysis: async ({ period, station_ids }) => {
         const request = {
             command: 'get_session_analysis',
             token: TOKEN,
             period: {
                 from: period?.[0]?.toLocaleDateString('en-CA') || null,
                 to: period?.[1]?.toLocaleDateString('en-CA') || null
-            }
+            },
+            station_ids: station_ids
         };
 
         try {

@@ -91,7 +91,7 @@ const fetchSessions = async () => {
             from: period.value[0]?.toLocaleDateString('en-CA'),
             to: period.value[1]?.toLocaleDateString('en-CA')
         },
-        stations: [stationId]
+        stations_ids: [stationId]
     };
     const response = await axios.post('/api', request);
     if (response.data.response_code === 0) {
@@ -102,7 +102,8 @@ const fetchSessions = async () => {
     const chartRes = await axios.post('/api', {
         command: 'get_session_analysis',
         token,
-        period: request.period
+        period: request.period,
+        stations_ids: [stationId]
     });
     if (chartRes.data.response_code === 0) {
         const analysis = chartRes.data;

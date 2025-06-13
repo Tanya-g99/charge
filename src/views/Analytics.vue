@@ -27,9 +27,9 @@ const connectorOptions = ref([
 ]);
 const stationOptions = ref();
 
-const selectedStatus = ref([]);
-const selectedConnectors = ref([]);
-const selectedStations = ref([]);
+const selectedStatus = ref(null);
+const selectedConnectors = ref(null);
+const selectedStations = ref(null);
 const period = ref([
     new Date(new Date().setMonth(new Date().getMonth() - 1)),
     new Date()
@@ -59,6 +59,7 @@ const fetchSessions = async () => {
 
     const sessionData = await Sessions.get({
         period: period.value,
+        station_ids: selectedStations.value,
         selectedStatus: selectedStatus.value,
         selectedConnectors: selectedConnectors.value,
         currentPage: currentPage.value,
@@ -69,7 +70,10 @@ const fetchSessions = async () => {
     sessions.value = sessionData.sessions;
     totalSessions.value = sessionData.total || 0;
 
-    const chartRes = await Sessions.getAnalysis(period.value);
+    const chartRes = await Sessions.getAnalysis({
+        period: period.value,
+        station_ids: selectedStations.value,
+    });
 
     chartData.value = chartRes.days.map(item => ({ ...item, value: item.session_count || item.value }));
     chartDesc.value = _.pick(chartRes, [
