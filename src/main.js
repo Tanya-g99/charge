@@ -4,15 +4,7 @@ import PrimeVue from 'primevue/config';
 import Aura from '@primeuix/themes/aura';
 import { definePreset } from '@primeuix/themes';
 import 'primeicons/primeicons.css'
-
-
-// // Импортируем библиотеки FontAwesome
-// import { library } from '@fortawesome/fontawesome-svg-core';
-// import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-// // Импортируем нужные иконки
-// import { faArrowDown, faArrowUp, faDownload, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
-// // Добавляем иконки в библиотеку
-// library.add(faArrowDown, faArrowUp, faDownload, faChevronLeft, faChevronRight);
+import 'primeflex/primeflex.css';
 
 import { createApp } from 'vue'
 // import { createPinia } from 'pinia'

@@ -104,10 +104,10 @@ watch(() => props.autoPlay, (newVal) => {
             </div>
         </div>
 
-        <i v-if="manyImages" class="nav-button left pi pi-chevron-left" @click="prevSlide" />
-        <i v-if="manyImages" class="nav-button right pi pi-chevron-right" @click="nextSlide" />
+        <i v-if="manyImages()" class="nav-button left pi pi-chevron-left" @click="prevSlide" />
+        <i v-if="manyImages()" class="nav-button right pi pi-chevron-right" @click="nextSlide" />
 
-        <div v-if="manyImages" class="dots">
+        <div v-if="manyImages()" class="dots">
             <span v-for="(img, index) in images" :key="index" :class="{ active: currentIndex === index }"
                 @click="goToSlide(index)" />
         </div>

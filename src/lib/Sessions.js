@@ -85,7 +85,7 @@ export const Sessions = {
         };
 
         try {
-            const response = await axios.post('api', request);
+            const response = await axios.post('api/', request);
             if (response.data.response_code === 0) {
                 return response.data;
             } else {
@@ -110,7 +110,7 @@ export const Sessions = {
         };
 
         try {
-            const response = await axios.post('api', request);
+            const response = await axios.post('api/', request);
             console.log("SEND sessions", request)
             if (response.data.response_code === 0) {
                 console.log("OK sessions", response.data)
