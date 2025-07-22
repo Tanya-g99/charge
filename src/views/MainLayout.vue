@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 
 const links = [
   {
@@ -14,39 +14,58 @@ const links = [
 
 const currentTheme = ref('')
 
+const updateTheme = (event) => {
+  if (event.key === "colorScheme" && currentTheme.value != event.newValue) {
+    if (currentTheme.value != event.newValue) {
+      document.documentElement.classList.toggle('dark');
+      currentTheme.value = event.newValue;
+    }
+  }
+}
+
+const toggleTheme = () => {
+  currentTheme.value = currentTheme.value === 'light' ? 'dark' : 'light';
+
+  document.documentElement.classList.toggle('dark');
+  localStorage.setItem('colorScheme', currentTheme.value)
+}
+
 onMounted(() => {
+  // сохраненная тема в localStorage
   const savedTheme = localStorage.getItem('colorScheme')
 
-  if (savedTheme) {
-    currentTheme.value = savedTheme
-  } else {
-    currentTheme.value = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'
-  }
+  currentTheme.value = savedTheme ? savedTheme :
+    // системные предпочтения
+    window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+
 
   if (currentTheme.value === 'dark')
     document.documentElement.classList.toggle('dark');
+
+  window.addEventListener('storage', updateTheme);
 })
 
-const toggleTheme = () => {
-  if (currentTheme.value === 'light') {
-    currentTheme.value = 'dark'
-  } else {
-    currentTheme.value = 'light'
-  }
 
-  localStorage.setItem('colorScheme', currentTheme.value)
-
-  document.documentElement.classList.toggle('dark');;
-}
+onUnmounted(() => {
+  window.removeEventListener("storage", updateTheme);
+})
 </script>
+
 
 <template>
   <header class="menu">
     <RouterLink class="router-link" v-for="link in links" :to="link.to">{{ link.name }}</RouterLink>
-    <button @click="toggleTheme">
-      <span v-if="currentTheme == 'light'" class="icon">🌙</span>
-      <span v-if="currentTheme == 'dark'" class="icon">☀</span>
-    </button>
+
+    <label class="theme-toggle">
+      <input type="checkbox" class="toggle-input" readonly @click="toggleTheme" />
+      <span class="toggle-slider">
+        <span class="icon" :class="{ moveRight: currentTheme === 'dark' }">
+          <i v-if="currentTheme === 'light'" class="pi pi-sun"></i>
+          <i v-else class="pi pi-moon"></i>
+        </span>
+      </span>
+    </label>
+
   </header>
   <main class="main-layout">
     <RouterView />
@@ -78,20 +97,61 @@ const toggleTheme = () => {
     color: var(--color-menu-active);
   }
 
-  button {
-    background: none;
-    margin-left: auto;
-    color: var(--color-menu-active);
-    border: none;
-    padding: 0.5rem;
-    cursor: pointer;
-
+  .theme-toggle {
+    position: relative;
+    display: inline-block;
+    width: 3rem;
+    height: 1.6rem;
+    margin-top: 0.2rem;
+    margin-right: 1rem;
     justify-self: center;
-    width: 2rem;
-  }
 
-  button:hover {
-    color: var(--color-menu-hover);
+    .toggle-input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-slider:hover {
+      border-color: var(--color-border-hover);
+    }
+
+    .toggle-slider {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: var(--color-card-bg);
+      border: 1px solid var(--color-border);
+      border-radius: 0.8rem;
+      cursor: pointer;
+      transition: background-color 0.3s, border-color 0.3s;
+
+      .icon {
+        position: absolute;
+        top: 0.05rem;
+        left: 0.05rem;
+        width: 1.4rem;
+        height: 1.4rem;
+        border-radius: 50%;
+        background-color: var(--color-menu-bg);
+        color: var(--color-text);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+        transition: left 0.3s ease;
+
+        i {
+          font-size: 0.7rem;
+        }
+      }
+
+      .moveRight {
+        left: 1.5rem;
+      }
+    }
   }
 }
 

@@ -33,7 +33,7 @@ function generateTestData(page = 1, max_elements = 10, total = 100) {
 export const Stations = {
     getByPage: async (page, pageSize) => {
         try {
-            const response = await axios.post('api', {
+            const response = await axios.post('api/', {
                 command: "get_stations",
                 token: TOKEN,
                 page,
@@ -51,7 +51,7 @@ export const Stations = {
 
     get: async () => {
         try {
-            const response = await axios.post('api', {
+            const response = await axios.post('api/', {
                 command: "get_stations",
                 token: TOKEN,
             });

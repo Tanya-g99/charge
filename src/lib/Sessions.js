@@ -81,15 +81,15 @@ export const Sessions = {
             page: currentPage,
             max_elements: pageSize,
             station_address: search,
-            stations: stationIds || undefined
+            station_ids: stationIds
         };
 
         try {
-            const response = await axios.post('api', request);
+            const response = await axios.post('api/', request);
             if (response.data.response_code === 0) {
                 return response.data;
             } else {
-                console.warn("Sessions API error:", response.data);
+                console.warn("Sessions API error:", response);
                 return generateTestSessions(currentPage, pageSize, 100);
             }
         } catch (err) {
@@ -98,18 +98,19 @@ export const Sessions = {
         }
     },
 
-    getAnalysis: async (period) => {
+    getAnalysis: async ({ period, station_ids }) => {
         const request = {
             command: 'get_session_analysis',
             token: TOKEN,
             period: {
                 from: period?.[0]?.toLocaleDateString('en-CA') || null,
                 to: period?.[1]?.toLocaleDateString('en-CA') || null
-            }
+            },
+            station_ids: station_ids
         };
 
         try {
-            const response = await axios.post('api', request);
+            const response = await axios.post('api/', request);
             console.log("SEND sessions", request)
             if (response.data.response_code === 0) {
                 console.log("OK sessions", response.data)

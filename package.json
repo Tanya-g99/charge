@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "NODE_OPTIONS='--max-old-space-size=4096' vite",
+    "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
     "test:unit": "vitest",
@@ -20,6 +20,7 @@
     "chart.js": "^4.4.8",
     "lodash": "^4.17.21",
     "pinia": "^2.1.7",
+    "primeflex": "^4.0.0",
     "primeicons": "^7.0.0",
     "primevue": "^4.3.2",
     "vue": "^3.4.29",

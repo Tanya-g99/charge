@@ -188,7 +188,8 @@
 
     // Button
 
-    .p-button:hover {
+    .p-button[data-p-severity="primary"]:hover,
+    .p-button:not([data-p-severity]):hover {
         background: var(--p-primary-800);
     }
 
