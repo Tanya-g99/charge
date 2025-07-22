@@ -52,7 +52,7 @@ const saveStationDetails = async () => {
     }
 
     try {
-        const res = await axios.post('/api', payload)
+        const res = await axios.post('/api/', payload)
         if (res.data.response_code === 0) {
             await fetchStationDetails()
             isEditing.value = false
@@ -94,7 +94,7 @@ const columns = ref([
 ])
 
 const fetchStationDetails = async () => {
-    const res = await axios.post('/api', {
+    const res = await axios.post('/api/', {
         command: 'get_stations',
         token,
         ids: [stationId],
@@ -106,7 +106,7 @@ const fetchStationDetails = async () => {
 
         if (station.value?.image_ids?.length) {
             const promises = station.value.image_ids.map((image_id) =>
-                axios.post('/api', {
+                axios.post('/api/', {
                     command: 'get_station_image',
                     token,
                     station_id: stationId,
@@ -135,13 +135,13 @@ const fetchSessions = async () => {
         },
         stations_ids: [stationId]
     }
-    const response = await axios.post('/api', request)
+    const response = await axios.post('/api/', request)
     if (response.data.response_code === 0) {
         sessions.value = response.data.sessions
         totalSessions.value = response.data.total || 0
     }
 
-    const chartRes = await axios.post('/api', {
+    const chartRes = await axios.post('/api/', {
         command: 'get_session_analysis',
         token,
         period: request.period,
