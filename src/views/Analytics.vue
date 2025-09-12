@@ -1,6 +1,5 @@
 <script setup>
 import { ref, watch, onMounted } from 'vue';
-import axios from 'axios';
 import Calendar from 'primevue/calendar';
 import MultiSelect from 'primevue/multiselect';
 import InputText from 'primevue/inputtext';
@@ -14,6 +13,7 @@ import { Sessions } from 'lib/Sessions';
 import Loading from 'components/Loading.vue';
 import Table from 'components/PrimeTable2.vue';
 import SessionsChart from 'components/SessionsChart.vue';
+import { entity } from '@/lib/EntityMixin';
 
 const loading = ref(true);
 const statusOptions = ref([
@@ -27,9 +27,9 @@ const connectorOptions = ref([
 ]);
 const stationOptions = ref();
 
-const selectedStatus = ref(null);
-const selectedConnectors = ref(null);
-const selectedStations = ref(null);
+const selectedStatus = ref([]);
+const selectedConnectors = ref([]);
+const selectedStations = ref([]);
 const period = ref([
     new Date(new Date().setMonth(new Date().getMonth() - 1)),
     new Date()
@@ -45,23 +45,14 @@ const totalSessions = ref(0);
 const currentPage = ref(1);
 const pageSize = ref(10);
 
-const columns = ref([
-    { field: 'station_id', title: 'Станция', sortable: true },
-    { field: 'connector_id', title: 'Коннектор' },
-    { field: 'period.from', title: 'Начало', sortable: true },
-    { field: 'period.to', title: 'Окончание', sortable: true },
-    { field: 'status', title: 'Статус', sortable: true },
-    { field: 'consumption', title: 'Потребление (Вт·ч)', sortable: true }
-]);
-
 const fetchSessions = async () => {
     loading.value = true;
 
     const sessionData = await Sessions.get({
         period: period.value,
-        station_ids: selectedStations.value,
-        selectedStatus: selectedStatus.value,
-        selectedConnectors: selectedConnectors.value,
+        station_ids: selectedStations.value?.slice(),
+        selectedStatus: selectedStatus.value?.slice(),
+        selectedConnectors: selectedConnectors.value?.slice(),
         currentPage: currentPage.value,
         pageSize: pageSize.value,
         search: search.value
@@ -97,8 +88,10 @@ const onPageChange = (page, size) => {
 };
 
 onMounted(async () => {
-    stationOptions.value = (await Stations.get()).map(station => {
-        return { label: station.id, value: station.id }
+    await Stations.get().then(response => {
+        stationOptions.value = response.stations.map(station => {
+            return { label: station.id, value: station.id }
+        })
     });
     fetchSessions();
 });
@@ -106,20 +99,18 @@ onMounted(async () => {
 
 <template>
     <div class="session-analyzer">
-        <!-- Фильтры -->
         <div class="filters">
             <div class="selects">
-                <MultiSelect v-model="selectedStatus" :autoOptionFocus="false" :options="statusOptions"
-                    optionLabel="label" optionValue="value" placeholder="Статус" />
-                <MultiSelect v-model="selectedConnectors" :autoOptionFocus="false" :options="connectorOptions"
-                    optionLabel="label" optionValue="value" placeholder="Коннектор" />
-                <MultiSelect v-model="selectedStations" :autoOptionFocus="false" :options="stationOptions"
-                    optionLabel="label" optionValue="value" placeholder="Станция" />
+                <MultiSelect v-model="selectedStatus" :maxSelectedLabels="3" :autoOptionFocus="false"
+                    :options="statusOptions" optionLabel="label" optionValue="value" placeholder="Статус" />
+                <MultiSelect v-model="selectedConnectors" :maxSelectedLabels="3" :autoOptionFocus="false"
+                    :options="connectorOptions" optionLabel="label" optionValue="value" placeholder="Коннектор" />
+                <MultiSelect v-model="selectedStations" :maxSelectedLabels="3" :autoOptionFocus="false"
+                    :options="stationOptions" optionLabel="label" optionValue="value" placeholder="Станция" />
                 <Calendar v-model="period" selectionMode="range" placeholder="Выберите период" :manualInput="false"
                     showIcon :maxDate="new Date()" />
             </div>
 
-            <!-- Поиск и чекбоксы -->
             <div class="search-and-checkboxes">
                 <InputGroup>
                     <InputText class="w-full" v-model="search" placeholder="Поиск..."
@@ -131,8 +122,9 @@ onMounted(async () => {
             </div>
         </div>
         <div class="table-container">
-            <Table :loading="loading" :data="sessions" :columns="columns" :currentPage="currentPage"
-                :pageSize="pageSize" :totalRecords="totalSessions" @pageChange="onPageChange" />
+            <Table enableExport :loading="loading" :data="sessions" :columns="entity.analyticsEntity"
+                :currentPage="currentPage" :pageSize="pageSize" :totalRecords="totalSessions"
+                @pageChange="onPageChange" />
         </div>
         <p class="title-1">Статистика:</p>
         <div v-if="loading" style="height: 600px;">

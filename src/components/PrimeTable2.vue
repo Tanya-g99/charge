@@ -1,11 +1,11 @@
 <script setup>
-import { ref, computed, watch, defineEmits } from 'vue';
+import { ref, computed, watch, useSlots } from 'vue';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import Button from 'primevue/button';
 import Paginator from 'primevue/paginator';
+import { get } from 'lodash';
 
-// Пропсы
 const props = defineProps({
     columns: {
         type: Array,
@@ -31,7 +31,7 @@ const props = defineProps({
         type: Number,
         default: 0
     },
-    export: {
+    enableExport: {
         type: Boolean,
         default: false
     },
@@ -42,6 +42,9 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['pageChange', "rowClick"]);
+const slots = useSlots();
+
+const hasTopSlot = computed(() => !!slots.top);
 
 const dt = ref()
 const sortColumn = ref(null);
@@ -59,7 +62,9 @@ const onPageChange = (event) => {
 
 const exportToCSV = () => {
     const headers = props.columns.map(col => col.title);
-    const rows = props.data.map(row => props.columns.map(col => row[col.field]));
+    const rows = props.data.map(row => props.columns.map(col =>
+        (col.format ?? ((v) => v))(row[col.field]))
+    );
 
     console.log(rows)
 
@@ -85,8 +90,9 @@ const onRowClick = (event) => {
 
 <template>
     <div class="table-container">
-        <div v-if="export" class="table-top">
-            <Button v-if="export" icon="pi pi-download" label="Export to CSV" @click="dt.exportCSV($event)" />
+        <div v-if="hasTopSlot || enableExport" class="table-top">
+            <slot name="top"></slot>
+            <Button v-if="enableExport" icon="pi pi-download" label="Export to CSV" @click="dt.exportCSV($event)" />
         </div>
 
         <DataTable ref="dt" :value="data" :loading="loading" :sortField="sortColumn" :sortOrder="sortAscending ? 1 : -1"
@@ -95,6 +101,11 @@ const onRowClick = (event) => {
 
             <Column v-for="col in props.columns" :key="col.field" :field="col.field" :header="col.title"
                 :sortable="col.sortable">
+                <template #body="slotProps">
+                    <component v-if="col.view" :is="col.view" :data="get(slotProps.data, col.field)" mode="mini">
+                    </component>
+                    <div v-else v-html="(col.format ?? ((v) => v))(get(slotProps.data, col.field))"></div>
+                </template>
             </Column>
 
             <template #empty>
@@ -124,8 +135,10 @@ const onRowClick = (event) => {
 
     .table-top {
         display: flex;
-        justify-content: flex-end;
+        justify-content: space-between;
+        align-items: center;
         gap: var(--page-gap);
+        width: 100%;
     }
 
     .data-empty {

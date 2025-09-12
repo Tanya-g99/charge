@@ -43,7 +43,7 @@ const hasChartDesc = computed(() => Object.keys(props.chartDesc).length > 0);
             <Card class="info-card">
                 <template #header>Среднее потребление:</template>
                 <template #content>
-                    <p>{{ chartDesc.average_session_consumption }}</p> Вт·ч
+                    <p>{{ chartDesc.average_session_consumption }}</p> кВт·ч
                 </template>
             </Card>
         </div>
