@@ -112,8 +112,8 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="table-container">
-        <div class="table-top">
+    <div class="table">
+        <div class="table__top">
             <button @click="exportToCSV" class="btn">
                 <font-awesome-icon icon="download" class="icon" />
                 <p>Export to CSV</p>
@@ -122,15 +122,16 @@ onMounted(() => {
 
 
 
-        <div class="table-wrapper">
-            <table class="myTable">
+        <div class="table__wrapper">
+            <table class="table__table">
                 <thead>
-                    <tr ref="headerRow" class="headerRow">
+                    <tr ref="headerRow" class="table__header-row">
                         <th v-for="(column, index) in columns" :key="index" @click="sortByColumn(column.name)"
-                            :class="{ sortable: column.sortable }" :style="getColumnStyle(index)">
+                            :class="{ 'table__header-cell--sortable': column.sortable }" :style="getColumnStyle(index)">
                             <span>{{ column.title }}</span>
                             <font-awesome-icon v-if="column.sortable" :icon="sortAscending ? 'arrow-down' : 'arrow-up'"
-                                class="sort-icon" :class="{ faded: sortColumn !== column.name }" />
+                                class="table__sort-icon"
+                                :class="{ 'table__sort-icon--faded': sortColumn !== column.name }" />
                         </th>
                     </tr>
                 </thead>
@@ -148,10 +149,10 @@ onMounted(() => {
         </div>
 
         <!-- Пагинация -->
-        <div class="pagination">
+        <div class="table__pagination">
 
             <!-- Выбор количества отображаемых элементов -->
-            <div class="page-size-selector">
+            <div class="table__page-size-selector">
                 <label for="pageSize">
                     Элементов на странице:
                 </label>
@@ -162,7 +163,7 @@ onMounted(() => {
                 </select>
             </div>
 
-            <div class="pagination-controls">
+            <div class="table__pagination-controls">
                 <!-- Кнопки для переключения страниц -->
                 <button @click="currentPage > 1 && currentPage--" :disabled="currentPage === 1">
                     <font-awesome-icon icon="chevron-left" class="chevron-icon" />
@@ -177,7 +178,7 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
-.table-container {
+.table {
 
     /* Скрыть скроллбар */
     ::-webkit-scrollbar,
@@ -194,27 +195,27 @@ onMounted(() => {
     height: 100%;
     padding: 16px;
 
-    .table-top {
+    &__top {
         display: flex;
         justify-content: flex-end;
     }
 
-    .table-wrapper {
+    &__wrapper {
         flex: 1;
+        min-height: 0;
         display: flex;
         flex-direction: column;
         position: relative;
         overflow: auto;
         border-bottom: none;
         border-right: none;
+    }
 
-        /* Контейнер для таблицы с прокруткой */
-        .myTable {
-            width: 100%;
-            background: var(--color-table-bg);
-            color: var(--color-text);
-            border-collapse: collapse;
-        }
+    &__table {
+        width: 100%;
+        background: var(--color-table-bg);
+        color: var(--color-text);
+        border-collapse: collapse;
 
         th,
         td {
@@ -229,14 +230,6 @@ onMounted(() => {
             transition: background 0.3s ease;
         }
 
-        th.sortable {
-            cursor: pointer;
-        }
-
-        th.sortable:hover {
-            background-color: var(--color-table-header-hover);
-        }
-
         tbody tr:nth-child(even) {
             background-color: var(--color-table-row);
         }
@@ -244,45 +237,54 @@ onMounted(() => {
         tbody tr:hover {
             background-color: var(--color-table-hover);
         }
+    }
 
-        .headerRow {
-            position: sticky;
-            top: 0;
-            background-color: var(--color-table-bg);
-            z-index: 10;
-            width: 100%;
-            color: var(--color-text-primary);
+    &__header-cell {
+        &--sortable {
+            cursor: pointer;
 
-            th,
-            td {
-                background: var(--color-table-header);
-                border-top: none;
-            }
-
-            span {
-                font-weight: bold;
-            }
-
-            .sort-icon {
-                margin-left: 8px;
-                transition: transform 0.3s ease;
-            }
-
-            .faded {
-                opacity: 0.5;
+            &:hover {
+                background-color: var(--color-table-header-hover);
             }
         }
     }
-}
 
-/* Пагинация */
-.pagination {
-    display: flex;
-    justify-content: end;
-    gap: 16px;
-    padding: 0 16px;
+    &__header-row {
+        position: sticky;
+        top: 0;
+        background-color: var(--color-table-bg);
+        z-index: 10;
+        width: 100%;
+        color: var(--color-text-primary);
 
-    .page-size-selector {
+        th,
+        td {
+            background: var(--color-table-header);
+            border-top: none;
+        }
+
+        span {
+            font-weight: bold;
+        }
+    }
+
+    &__sort-icon {
+        margin-left: 8px;
+        transition: transform 0.3s ease;
+
+        &--faded {
+            opacity: 0.5;
+        }
+    }
+
+    &__pagination {
+        display: flex;
+        justify-content: end;
+        gap: 16px;
+        padding: 0 16px;
+    }
+
+    &__page-size-selector {
         display: flex;
         align-items: center;
         font-size: 14px;
@@ -307,10 +309,9 @@ onMounted(() => {
                 color: var(--color-text-primary);
             }
         }
-
     }
 
-    .pagination-controls {
+    &__pagination-controls {
         display: flex;
         align-items: center;
         gap: 8px;

@@ -80,9 +80,7 @@ onMounted(() => {
 });
 
 watch(() => props.data, () => {
-    // console.log(props.data)
     updateMarkers();
-    console.log(props.data)
 }, { deep: true });
 
 function resolveField(item, field) {
@@ -91,7 +89,6 @@ function resolveField(item, field) {
 }
 
 function updateMarkers() {
-    console.log("updateMarkers")
     if (!map.value || !markersCluster) return;
 
     markersCluster.clearLayers();
@@ -107,7 +104,6 @@ function updateMarkers() {
         const marker = L.marker([lat, lng]);
 
         if (props.showTooltip) {
-            console.log(elem)
             marker.bindTooltip(props.tooltipFormatter(elem), {
                 permanent: false,
                 direction: 'top'
@@ -130,27 +126,27 @@ function updateMarkers() {
 
 <template>
     <div class="stations-map">
-        <div class="map-top">
+        <div class="stations-map__top">
             <slot name="top" />
         </div>
-        <div ref="mapContainer" class="map-container" />
+        <div ref="mapContainer" class="stations-map__container" />
     </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .stations-map {
     display: flex;
     flex-direction: column;
     height: 100%;
-}
 
-.map-top {
-    margin-bottom: 1rem;
-}
+    &__top {
+        margin-bottom: 1rem;
+    }
 
-.map-container {
-    flex-grow: 1;
-    height: 100%;
-    min-height: 400px;
+    &__container {
+        flex-grow: 1;
+        height: 100%;
+        min-height: 400px;
+    }
 }
 </style>

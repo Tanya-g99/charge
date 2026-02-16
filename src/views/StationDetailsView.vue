@@ -7,6 +7,7 @@ import Calendar from 'primevue/calendar'
 import MultiSelect from 'primevue/multiselect'
 import Card from 'primevue/card'
 import InputText from 'primevue/inputtext';
+import InputNumber from 'primevue/inputnumber';
 import Textarea from 'primevue/textarea';
 import Button from 'primevue/button';
 
@@ -31,7 +32,9 @@ const editedStation = ref({
     latitude: null,
     longitude: null,
     address: '',
-    description: ''
+    postal_address: '',
+    description: '',
+    tariff_rub_per_kwh: null
 })
 const startEditing = () => {
     if (!station.value) return
@@ -39,8 +42,10 @@ const startEditing = () => {
     editedStation.value = {
         latitude: station.value.latitude,
         longitude: station.value.longitude,
-        address: station.value.address,
-        description: station.value.description
+        address: station.value.address ?? '',
+        postal_address: station.value.postal_address ?? '',
+        description: station.value.description ?? '',
+        tariff_rub_per_kwh: station.value.tariff_rub_per_kwh ?? station.value.tariff ?? null
     }
 }
 const saveStationDetails = async () => {
@@ -51,7 +56,9 @@ const saveStationDetails = async () => {
         latitude: editedStation.value.latitude,
         longitude: editedStation.value.longitude,
         address: editedStation.value.address,
-        description: editedStation.value.description
+        postal_address: editedStation.value.postal_address,
+        description: editedStation.value.description,
+        tariff_rub_per_kwh: editedStation.value.tariff_rub_per_kwh
     }
 
     try {
@@ -91,7 +98,7 @@ const station = ref(null);
 const imageList = ref([]);
 
 const fetchStationDetails = async () => {
-    await Stations.get(stationId).then((response) => {
+    await Stations.getById(stationId, true).then((response) => {
         station.value = response.stations[0]
     });
 
@@ -155,17 +162,40 @@ onMounted(async () => {
                 {{ station?.id || '-' }}
             </span>
         </p>
-        <div class="station-info">
-            <div class="info">
+        <div class="station-details__station-info">
+            <div class="station-details__info">
                 <p><strong class="title-3">Номер: </strong> {{ station?.serial || '-' }}</p>
+
+                <p>
+                    <strong class="title-3">Тариф (руб/кВт·ч): </strong>
+                    <template v-if="isEditing">
+                        <InputNumber v-model="editedStation.tariff_rub_per_kwh" mode="decimal" :minFractionDigits="2"
+                            :maxFractionDigits="4" placeholder="Стоимость за кВт·ч" inputClass="w-full" />
+                    </template>
+                    <template v-else>
+                        {{ (station?.tariff_rub_per_kwh != null || station?.tariff != null) ?
+                            (station?.tariff_rub_per_kwh ?? station?.tariff) + ' ₽' : '-' }}
+                    </template>
+                </p>
 
                 <p>
                     <strong class="title-3">Адрес: </strong>
                     <template v-if="isEditing">
-                        <InputText v-model="editedStation.address" />
+                        <InputText v-model="editedStation.address" placeholder="Введите адрес" class="w-full" />
                     </template>
                     <template v-else>
                         {{ station?.address || '-' }}
+                    </template>
+                </p>
+
+                <p>
+                    <strong class="title-3">Почтовый адрес: </strong>
+                    <template v-if="isEditing">
+                        <InputText v-model="editedStation.postal_address" placeholder="Введите почтовый адрес"
+                            class="w-full" />
+                    </template>
+                    <template v-else>
+                        {{ station?.postal_address || '-' }}
                     </template>
                 </p>
 
@@ -204,8 +234,8 @@ onMounted(async () => {
 
 
                 <div v-if="station?.connectors?.length">
-                    <div class="connectors">
-                        <Card v-for="conn in station.connectors" :key="conn.id" class="connector-card">
+                    <div class="station-details__connectors">
+                        <Card v-for="conn in station.connectors" :key="conn.id" class="station-details__connector-card">
                             <template #content>
                                 <p class="title-3">Коннектор {{ conn.id }}:</p>
                                 <p><strong>Тип:</strong> {{ conn.type.name }} ({{ conn.type.current_type }})</p>
@@ -231,13 +261,13 @@ onMounted(async () => {
                 </div>
             </div>
 
-            <div class="image-wrapper">
+            <div class="station-details__image-wrapper">
                 <Galleria :images="imageList"></Galleria>
             </div>
         </div>
 
         <p class="title-2">Информация о сессиях:</p>
-        <div class="filters">
+        <div class="station-details__filters">
             <MultiSelect v-model="selectedStatus" :maxSelectedLabels="3" :options="statusOptions" optionLabel="label"
                 optionValue="value" placeholder="Статус" />
             <MultiSelect v-model="selectedConnectors" :maxSelectedLabels="3" :options="connectorOptions"
@@ -246,7 +276,7 @@ onMounted(async () => {
                 :maxDate="new Date()" />
         </div>
 
-        <div class="table-container">
+        <div class="station-details__table-container">
             <Table :loading="loading" :data="sessions" :columns="entity.stationEntity"
                 :totalRecords="totalRecordsSessions" :pageSize="pageSizeSessions" :currentPage="currentPageSessions" />
         </div>
@@ -258,13 +288,13 @@ onMounted(async () => {
     </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .station-details {
     display: flex;
     flex-direction: column;
     gap: var(--page-large-gap);
 
-    .station-info {
+    &__station-info {
         display: grid;
         grid-template-columns: 2fr 3fr;
         gap: var(--page-large-gap);
@@ -275,39 +305,39 @@ onMounted(async () => {
             display: flex;
             flex-direction: column-reverse;
         }
+    }
 
-        .info {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
+    &__info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
 
-            p {
-                margin: 0.25rem 0;
-            }
-
-            .connectors {
-                display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-                gap: 16px;
-
-                .connector-card {
-                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-                }
-            }
-        }
-
-        .image-wrapper {
-            height: 600px;
-            width: 100%;
-            min-height: 300px;
-
-            @media (max-width: 768px) {
-                height: 300px;
-            }
+        p {
+            margin: 0.25rem 0;
         }
     }
 
-    .filters {
+    &__connectors {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 16px;
+    }
+
+    &__connector-card {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    &__image-wrapper {
+        height: 600px;
+        width: 100%;
+        min-height: 300px;
+
+        @media (max-width: 768px) {
+            height: 300px;
+        }
+    }
+
+    &__filters {
         display: flex;
         gap: 12px;
         align-items: center;
@@ -316,6 +346,10 @@ onMounted(async () => {
             flex-direction: column;
             align-items: stretch;
         }
+    }
+
+    &__table-container {
+        height: 100%;
     }
 }
 </style>

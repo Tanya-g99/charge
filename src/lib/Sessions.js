@@ -15,9 +15,8 @@ export const Sessions = {
      * @param {String} params.search
      * @param {Array} params.stationIds
      */
-    async get({ period, selectedStatus = [], selectedConnectors = [], currentPage = 1, pageSize = 10, search = null, stationIds = [] }) {
+    async get({ period, selectedStatus = undefined, selectedConnectors = undefined, currentPage = 1, pageSize = 10, search = undefined, stationIds = undefined }) {
         stationIds = Array.isArray(stationIds) ? stationIds : [stationIds];
-        console.log("selectedStatus selectedConnectors", selectedStatus, selectedConnectors)
         const request = {
             command: 'get_sessions',
             token: TOKEN,
@@ -34,7 +33,9 @@ export const Sessions = {
         }
 
         try {
+            console.log("Sessions get REQUEST", request)
             const response = await axios.post('/api/', request)
+            console.log("Sessions get RESPONSE", request)
 
             if (response.data.response_code === 0) {
                 return response.data
@@ -68,10 +69,11 @@ export const Sessions = {
         }
 
         try {
+            console.log("Sessions getAnalysis REQUEST", request)
             const response = await axios.post('/api/', request)
+            console.log("Sessions getAnalysis RESPONSE", request)
 
             if (response.data.response_code === 0) {
-                console.log("Sessions getAnalysis -> OK", request, response)
                 return response.data
             } else {
                 console.error("Session analysis API returned error:", response.data, "Request", request)

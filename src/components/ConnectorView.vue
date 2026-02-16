@@ -28,7 +28,7 @@ const miniFields = [
 
 <template>
     <div class="connectors">
-        <Card v-for="connector in data" class="connector-card">
+        <Card v-for="connector in data" :key="connector.id" class="connectors__card">
             <template #content>
                 <p v-if="mode === 'full'" class="title-3">
                     Коннектор {{ connector.id }}:
@@ -52,8 +52,8 @@ const miniFields = [
     grid-template-columns: repeat(auto-fill, minmax(v-bind("props.mode == 'mini' ? '150px' : '220px'"), 1fr));
     gap: v-bind("props.mode == 'mini' ? '8px' : '16px'");
 
-    .connector-card {
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    &__card {
+        box-shadow: var(--shadow);
     }
 }
 </style>

@@ -63,8 +63,8 @@ const exportToCSV = () => {
 </script>
 
 <template>
-    <div class="table-container">
-        <div class="table-top">
+    <div class="table">
+        <div class="table__top">
             <Button icon="pi pi-download" label="Export to CSV" class="p-button-sm p-button-primary"
                 @click="exportToCSV" />
         </div>
@@ -84,37 +84,36 @@ const exportToCSV = () => {
 
 
 <style lang="scss" scoped>
-.table-container {
+.table {
     padding: 16px;
     height: 100%;
     display: flex;
     flex-direction: column;
-}
 
-.table-top {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 10px;
-}
+    &__top {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 10px;
+    }
 
-.table-container .p-datatable-table,
-.p-datatable-table-container {
-    height: 100% !important;
-}
+    .p-datatable-table,
+    .p-datatable-table {
+        height: 100% !important;
+    }
 
-.p-datatable {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    height: 100% !important;
-}
+    .p-datatable {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        height: 100% !important;
+    }
 
-.table-container .p-datatable-scrollable-table {
-    height: 100% !important;
-    display: flex;
-    overflow: auto;
+    .p-datatable-scrollable-table {
+        height: 100% !important;
+        display: flex;
+        overflow: auto;
+    }
 }
-
 
 .p-datatable-gridlines .p-datatable-paginator-bottom {
     display: flex;

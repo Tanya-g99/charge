@@ -26,8 +26,7 @@ export const entity = {
         { field: 'period.from', title: 'Начало', sortable: true },
         { field: 'period.to', title: 'Окончание', sortable: true },
         { field: 'status', title: 'Статус', sortable: true, },
-        { field: 'consumption', title: 'Потребление (Вт·ч)', sortable: true },
+        { field: 'consumption', title: 'Потребление (кВт·ч)', sortable: true },
     ],
-
 
 };

@@ -66,8 +66,6 @@ const exportToCSV = () => {
         (col.format ?? ((v) => v))(row[col.field]))
     );
 
-    console.log(rows)
-
     let csvContent = [headers, ...rows].map(e => e.join(",")).join("\n");
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
@@ -89,8 +87,8 @@ const onRowClick = (event) => {
 </script>
 
 <template>
-    <div class="table-container">
-        <div v-if="hasTopSlot || enableExport" class="table-top">
+    <div class="table">
+        <div v-if="hasTopSlot || enableExport" class="table__top">
             <slot name="top"></slot>
             <Button v-if="enableExport" icon="pi pi-download" label="Export to CSV" @click="dt.exportCSV($event)" />
         </div>
@@ -109,7 +107,7 @@ const onRowClick = (event) => {
             </Column>
 
             <template #empty>
-                <div class="data-empty">
+                <div class="table__data-empty">
                     Нет данных для отображения
                 </div>
             </template>
@@ -126,23 +124,37 @@ const onRowClick = (event) => {
 </template>
 
 <style lang="scss" scoped>
-.table-container {
+.table {
     height: 100%;
+    min-height: 0;
     display: flex;
     flex-direction: column;
     gap: var(--page-gap);
 
-
-    .table-top {
+    &__top {
         display: flex;
         justify-content: space-between;
         align-items: center;
         gap: var(--page-gap);
         width: 100%;
+        flex-shrink: 0;
     }
 
-    .data-empty {
+    &__data-empty {
         text-align: center;
+    }
+
+    :deep(.p-datatable) {
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+    }
+
+    :deep(.p-datatable-wrapper) {
+        flex: 1;
+        min-height: 0;
+        overflow: auto;
     }
 }
 </style>

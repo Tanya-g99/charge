@@ -50,7 +50,7 @@ const fetchSessions = async () => {
 
     const sessionData = await Sessions.get({
         period: period.value,
-        station_ids: selectedStations.value?.slice(),
+        stationIds: selectedStations.value?.slice(),
         selectedStatus: selectedStatus.value?.slice(),
         selectedConnectors: selectedConnectors.value?.slice(),
         currentPage: currentPage.value,
@@ -88,7 +88,7 @@ const onPageChange = (page, size) => {
 };
 
 onMounted(async () => {
-    await Stations.get().then(response => {
+    await Stations.getById().then(response => {
         stationOptions.value = response.stations.map(station => {
             return { label: station.id, value: station.id }
         })
@@ -99,8 +99,8 @@ onMounted(async () => {
 
 <template>
     <div class="session-analyzer">
-        <div class="filters">
-            <div class="selects">
+        <div class="session-analyzer__filters">
+            <div class="session-analyzer__selects">
                 <MultiSelect v-model="selectedStatus" :maxSelectedLabels="3" :autoOptionFocus="false"
                     :options="statusOptions" optionLabel="label" optionValue="value" placeholder="Статус" />
                 <MultiSelect v-model="selectedConnectors" :maxSelectedLabels="3" :autoOptionFocus="false"
@@ -111,9 +111,9 @@ onMounted(async () => {
                     showIcon :maxDate="new Date()" />
             </div>
 
-            <div class="search-and-checkboxes">
+            <div class="session-analyzer__search-and-checkboxes">
                 <InputGroup>
-                    <InputText class="w-full" v-model="search" placeholder="Поиск..."
+                    <InputText class="w-full" v-model="search" placeholder="Поиск по адресу зарядной станции..."
                         @keyup.enter="addressSearch = search" />
                     <InputGroupAddon>
                         <Button icon="pi pi-search" severity="secondary" @click="addressSearch = search" />
@@ -121,109 +121,105 @@ onMounted(async () => {
                 </InputGroup>
             </div>
         </div>
-        <div class="table-container">
+        <div class="session-analyzer__table-container">
             <Table enableExport :loading="loading" :data="sessions" :columns="entity.analyticsEntity"
                 :currentPage="currentPage" :pageSize="pageSize" :totalRecords="totalSessions"
                 @pageChange="onPageChange" />
         </div>
-        <p class="title-1">Статистика:</p>
-        <div v-if="loading" style="height: 600px;">
-            <Loading />
-        </div>
+        <div>
+            <p class="title-1">Статистика:</p>
+            <div v-if="loading" style="height: 600px;">
+                <Loading />
+            </div>
 
-        <SessionsChart v-else :chartData="chartData" :chartDesc="chartDesc" />
+            <SessionsChart class="" v-else :chartData="chartData" :chartDesc="chartDesc" />
+        </div>
 
     </div>
 
 
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .session-analyzer {
     display: grid;
-    grid-template-rows: auto minmax(400px, 1fr) auto auto;
+    grid-template-rows: auto minmax(400px, 1fr) auto;
     gap: var(--page-large-gap);
     height: 100%;
     position: relative;
 
-
-    .filters {
+    &__filters {
         display: flex;
         flex-direction: column;
         gap: var(--page-gap);
         width: fit-content;
-
-
-        .selects,
-        .search-and-checkboxes {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-        }
-
-        .search-and-checkboxes {
-            justify-content: space-between;
-        }
-
-        .checkboxes {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
     }
 
-    .table-container {
+    &__selects,
+    &__search-and-checkboxes {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+    }
+
+    &__search-and-checkboxes {
+        justify-content: space-between;
+    }
+
+    &__checkboxes {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+
+    &__table-container {
         height: 100%;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
     }
 
-    .chart-container {
+    &__chart-container {
         display: grid;
         grid-template-columns: 2fr 1fr;
+    }
 
-        .cards-container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-            padding: 16px;
+    &__cards-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        padding: 16px;
+    }
 
-            .info-card {
-                padding: var(--card-large-padding);
-                border-radius: var(--cadr-large-radius);
-                text-align: center;
+    &__info-card {
+        padding: var(--card-large-padding);
+        border-radius: var(--cadr-large-radius);
+        text-align: center;
 
-                p {
-                    font-weight: bold;
-                }
+        p {
+            font-weight: bold;
 
-                @media (min-width: 768px) {
-                    p {
-                        font-size: 2rem;
-                    }
-                }
+            @media (min-width: 768px) {
+                font-size: 2rem;
             }
         }
     }
-}
 
-@media (max-width: 768px) {
-    .session-analyzer {
-
-        .filters {
+    @media (max-width: 768px) {
+        &__filters {
             width: 100%;
-
-            .selects {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
         }
 
-        .chart-container {
+        &__selects {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        &__chart-container {
             grid-template-columns: 1fr;
-
         }
 
-        .table-container {
+        &__table-container {
             overflow-x: auto;
         }
     }

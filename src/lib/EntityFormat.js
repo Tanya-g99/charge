@@ -15,7 +15,6 @@ function stationStatusFormat(stationStatus) {
 }
 
 function stationFormat(station) {
-    console.log("stationFormat", station)
     return `
             <p>
                 <strong class="title-3">Станция ${station?.serial || '-'}</strong> 

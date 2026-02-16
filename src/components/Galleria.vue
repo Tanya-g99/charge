@@ -98,26 +98,28 @@ watch(() => props.autoPlay, (newVal) => {
 <template>
     <div v-if="images.length" class="slider" :style="{ height: height }" @touchstart="handleTouchStart"
         @touchend="handleTouchEnd">
-        <div class="slider-wrapper" :style="{ transform: `translateX(-${currentIndex * 100}%)` }">
-            <div v-for="(img, index) in images" :key="index" class="slide">
-                <img :src="img" class="slide-image" />
+        <div class="slider__wrapper" :style="{ transform: `translateX(-${currentIndex * 100}%)` }">
+            <div v-for="(img, index) in images" :key="index" class="slider__slide">
+                <img :src="img" class="slider__slide-image" />
             </div>
         </div>
 
-        <i v-if="manyImages()" class="nav-button left pi pi-chevron-left" @click="prevSlide" />
-        <i v-if="manyImages()" class="nav-button right pi pi-chevron-right" @click="nextSlide" />
+        <i v-if="manyImages()" class="slider__nav-button slider__nav-button--left pi pi-chevron-left"
+            @click="prevSlide" />
+        <i v-if="manyImages()" class="slider__nav-button slider__nav-button--right pi pi-chevron-right"
+            @click="nextSlide" />
 
-        <div v-if="manyImages()" class="dots">
-            <span v-for="(img, index) in images" :key="index" :class="{ active: currentIndex === index }"
-                @click="goToSlide(index)" />
+        <div v-if="manyImages()" class="slider__dots">
+            <span v-for="(img, index) in images" :key="index" :class="{ 'slider__dot--active': currentIndex === index }"
+                class="slider__dot" @click="goToSlide(index)" />
         </div>
     </div>
-    <div v-else class="no-image">
+    <div v-else class="slider__no-image">
         Нет изображения
     </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .slider {
     position: relative;
     width: 100%;
@@ -125,28 +127,27 @@ watch(() => props.autoPlay, (newVal) => {
     overflow: hidden;
     border-radius: var(--cadr-large-radius);
 
-
-    .slider-wrapper {
+    &__wrapper {
         display: flex;
         transition: transform 0.6s ease;
         width: 100%;
         height: 100%;
-
-        .slide {
-            min-width: 100%;
-            height: 100%;
-            background: var(--color-slider-bg);
-        }
-
-        .slide-image {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            display: block;
-        }
     }
 
-    .nav-button {
+    &__slide {
+        min-width: 100%;
+        height: 100%;
+        background: var(--color-slider-bg);
+    }
+
+    &__slide-image {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+    }
+
+    &__nav-button {
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
@@ -159,24 +160,24 @@ watch(() => props.autoPlay, (newVal) => {
         font-size: 20px;
         border-radius: 50%;
         user-select: none;
+
+        &--left {
+            left: 10px;
+        }
+
+        &--right {
+            right: 10px;
+        }
     }
 
-    .nav-button.left {
-        left: 10px;
-    }
-
-    .nav-button.right {
-        right: 10px;
-    }
-
-    .dots {
+    &__dots {
         position: absolute;
         bottom: 12px;
         width: 100%;
         text-align: center;
     }
 
-    .dots span {
+    &__dot {
         display: inline-block;
         width: 10px;
         height: 10px;
@@ -185,25 +186,24 @@ watch(() => props.autoPlay, (newVal) => {
         border-radius: 50%;
         cursor: pointer;
         transition: background-color 0.3s;
+
+        &--active {
+            background: var(--p-surface-600);
+        }
     }
 
-    .dots span.active {
-        background: var(--p-surface-600);
+    &__no-image {
+        width: 100%;
+        height: 100%;
+        font-size: 14px;
+        color: #555;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--color-slider-bg);
+        text-align: center;
+        padding: 8px;
+        border-radius: 12px;
     }
-
-}
-
-.no-image {
-    width: 100%;
-    height: 100%;
-    font-size: 14px;
-    color: #555;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--color-slider-bg);
-    text-align: center;
-    padding: 8px;
-    border-radius: 12px;
 }
 </style>

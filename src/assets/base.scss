@@ -104,57 +104,55 @@
     --color-border: var(--color-light-border-100);
     --color-border-hover: var(--color-light-border-200);
 
+    // Меню
     --color-menu-bg: var(--color-light-100);
-    /* Светлый синий оттенок для фона меню */
     --color-menu-text: var(--p-primary-700);
-    /* Яркий темно-синий для текста в меню */
     --color-menu-hover: var(--p-primary-color);
-    /* Лазурно-синий при наведении */
     --color-menu-active: var(--p-primary-color);
-    /* Темно-синий для активного элемента */
 
+    // Кнопка
     --color-button-bg: var(--p-primary-color);
-    /* Лазурно-синий для кнопок */
     --color-button-border: var(--color-light-border-100);
     --color-button-text: var(--color-button-text-light);
     --color-button-hover: var(--color-button-hover-light);
     --color-button-disabled: var(--color-button-disabled-light);
 
+    // Инпут
     --color-input-bg: var(--color-light-100);
     --color-input-border: var(--color-light-border-100);
     --color-input-hover: var(--color-light-input-hover);
     --color-input-text: var(--color-light-400);
 
+    // Карточка
     --color-card-bg: var(--color-light-200);
     --color-card-bg-opacity: var(--color-light-opacity);
     --color-card-border-opacity: var(--color-dark-opacity);
     --color-card-border: var(--color-light-border-100);
     --color-card-text: var(--p-primary-color);
 
+    // Текст
     --color-heading: var(--p-primary-color);
-    /* Лазурно-синий для заголовков */
     --color-text: var(--color-text-light);
     --color-text-muted: var(--color-text-muted-light);
 
+    // Состояния
     --color-success: var(--color-success-light);
     --color-error: var(--color-error-light);
     --color-warning: var(--color-warning-light);
     --color-info: var(--color-info-light);
-    /* === Яркие оттенки для состояния при наведении === */
     --color-success-bright: var(--color-success-light-hover);
-    /* Яркий зеленый при наведении */
     --color-error-bright: var(--color-error-light-hover);
-    /* Яркий красный при наведении */
     --color-warning-bright: var(--color-warning-light-hover);
-    /* Ярко-желтый при наведении */
     --color-info-bright: var(--color-info-light-hover);
-    /* Лазурно-синий при наведении */
 
+    // График
     --color-chart-bg: var(--color-light-100);
     --color-chart-line: var(--color-dark-100);
 
+    // Скролл
     --color-scrollbar: var(--color-light-300);
 
+    // Таблица
     --color-table-border: var(--color-table-border-light);
     --color-table-header: var(--color-table-header-light);
     --color-table-header-hover: var(--color-table-header-hover-light);
@@ -162,7 +160,11 @@
     --color-table-hover: var(--color-table-hover-light);
     --color-table-bg: var(--color-table-bg-light);
 
+    // Слайдер
     --color-slider-bg: var(--color-slider-bg-light);
+
+    // Тень
+    --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   }
 
   /* === Блок 3: Тёмная тема === */
@@ -174,59 +176,56 @@
     --color-border: var(--color-dark-border-100);
     --color-border-hover: var(--color-dark-border-200);
 
+    // Меню
     --color-menu-bg: var(--color-dark-100);
-    /* Темный синий фон для меню */
     --color-menu-text: var(--p-primary-700);
-    /* Белый текст для контраста */
     --color-menu-hover: var(--p-primary-color);
-    /* Лазурно-синий при наведении */
     --color-menu-active: var(--p-primary-color);
-    /* Темно-синий для активного элемента */
 
+    // Кнопка
     --color-button-bg: var(--p-primary-color);
-    /* Лазурно-синий для кнопок */
     --color-button-border: var(--color-dark-border-100);
     --color-button-text: var(--color-button-text-dark);
     --color-button-hover: var(--color-button-hover-dark);
     --color-button-disabled: var(--color-button-disabled-dark);
 
+    // Инпут
     --color-input-bg: var(--color-dark-100);
     --color-input-border: var(--color-dark-border-100);
     --color-input-hover: var(--color-dark-input-hover);
     --color-input-text: var(--color-dark-400);
 
+    // Карточки
     --color-card-bg: var(--color-dark-200);
     --color-card-bg-opacity: var(--color-dark-opacity);
     --color-card-border-opacity: var(--color-light-opacity);
-    font-weight: bold;
 
     --color-card-border: var(--color-dark-border-100);
     --color-card-text: var(--p-primary-color);
 
+    // Текст
     --color-heading: var(--p-primary-color);
-    /* Лазурно-синий для заголовков */
     --color-text: var(--color-text-dark);
     --color-text-muted: var(--color-text-muted-dark);
 
+    // состояния
     --color-success: var(--color-success-dark);
     --color-error: var(--color-error-dark);
     --color-warning: var(--color-warning-dark);
     --color-info: var(--color-info-dark);
-    /* === Яркие оттенки для состояния при наведении === */
     --color-success-bright: var(--color-success-dark-hover);
-    /* Яркий зеленый при наведении */
     --color-error-bright: var(--color-error-dark-hover);
-    /* Яркий красный при наведении */
     --color-warning-bright: var(--color-warning-dark-hover);
-    /* Ярко-желтый при наведении */
     --color-info-bright: var(--color-info-dark-hover);
-    /* Лазурно-синий при наведении */
 
+    // График
     --color-chart-bg: var(--color-dark-100);
     --color-chart-line: var(--color-light-100);
 
+    // Скролл
     --color-scrollbar: var(--color-dark-300);
 
+    // Таблица
     --color-table-border: var(--color-table-border-dark);
     --color-table-header: var(--color-table-header-dark);
     --color-table-header-hover: var(--color-table-header-hover-dark);
@@ -234,7 +233,11 @@
     --color-table-hover: var(--color-table-hover-dark);
     --color-table-bg: var(--color-table-bg-dark);
 
+    // Слайдер
     --color-slider-bg: var(--color-slider-bg-dark);
+
+    // Тень
+    --shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
   }
 
   :root {

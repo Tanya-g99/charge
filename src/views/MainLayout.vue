@@ -54,12 +54,13 @@ onUnmounted(() => {
 
 <template>
   <header class="menu">
-    <RouterLink class="router-link" v-for="link in links" :to="link.to">{{ link.name }}</RouterLink>
+    <RouterLink class="menu__router-link" v-for="link in links" :key="link.to" :to="link.to">{{ link.name }}
+    </RouterLink>
 
-    <label class="theme-toggle">
-      <input type="checkbox" class="toggle-input" readonly @click="toggleTheme" />
-      <span class="toggle-slider">
-        <span class="icon" :class="{ moveRight: currentTheme === 'dark' }">
+    <label class="menu__theme-toggle">
+      <input type="checkbox" class="menu__toggle-input" readonly @click="toggleTheme" />
+      <span class="menu__toggle-slider">
+        <span class="menu__icon" :class="{ 'menu__icon--move-right': currentTheme === 'dark' }">
           <i v-if="currentTheme === 'light'" class="pi pi-sun"></i>
           <i v-else class="pi pi-moon"></i>
         </span>
@@ -83,21 +84,20 @@ onUnmounted(() => {
   height: var(--menu-height);
   z-index: 9999;
 
-
-  .router-link {
+  &__router-link {
     flex-grow: 1;
     text-align: center;
+
+    &.router-link-active {
+      font-weight: bold;
+    }
+
+    &.router-link-exact-active {
+      color: var(--color-menu-active);
+    }
   }
 
-  .router-link-active {
-    font-weight: bold;
-  }
-
-  .router-link-exact-active {
-    color: var(--color-menu-active);
-  }
-
-  .theme-toggle {
+  &__theme-toggle {
     position: relative;
     display: inline-block;
     width: 3rem;
@@ -105,52 +105,52 @@ onUnmounted(() => {
     margin-top: 0.2rem;
     margin-right: 1rem;
     justify-self: center;
+  }
 
-    .toggle-input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
+  &__toggle-input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
 
-    .toggle-slider:hover {
+  &__toggle-slider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--color-card-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 0.8rem;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
+
+    &:hover {
       border-color: var(--color-border-hover);
     }
+  }
 
-    .toggle-slider {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: var(--color-card-bg);
-      border: 1px solid var(--color-border);
-      border-radius: 0.8rem;
-      cursor: pointer;
-      transition: background-color 0.3s, border-color 0.3s;
+  &__icon {
+    position: absolute;
+    top: 0.05rem;
+    left: 0.05rem;
+    width: 1.4rem;
+    height: 1.4rem;
+    border-radius: 50%;
+    background-color: var(--color-menu-bg);
+    color: var(--color-text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+    transition: left 0.3s ease;
 
-      .icon {
-        position: absolute;
-        top: 0.05rem;
-        left: 0.05rem;
-        width: 1.4rem;
-        height: 1.4rem;
-        border-radius: 50%;
-        background-color: var(--color-menu-bg);
-        color: var(--color-text);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
-        transition: left 0.3s ease;
+    i {
+      font-size: 0.7rem;
+    }
 
-        i {
-          font-size: 0.7rem;
-        }
-      }
-
-      .moveRight {
-        left: 1.5rem;
-      }
+    &--move-right {
+      left: 1.5rem;
     }
   }
 }
